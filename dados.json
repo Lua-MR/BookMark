@@ -1,0 +1,24 @@
+{
+    "books": [
+        {
+            "currentPage": 50,
+            "totalPages": 300,
+            "name": "Dom Quixote",
+            "author": "Miguel de Cervantes",
+            "genre": "Romance",
+            "status": "Lendo",
+            "image": "https://example.com/dom-quixote.jpg",
+            "rating": "4.5"
+        }
+    ],
+    "goals": [
+        {
+            "id": 1,
+            "name": "Ler 5 livros este ano",
+            "totalBooks": 5,
+            "progress": 3,
+            "progressPercentage": 60,
+            "status": "Em andamento"
+        }
+    ]
+}

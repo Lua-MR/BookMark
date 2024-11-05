@@ -1,18 +1,17 @@
 import React, { useState, useRef, useEffect } from 'react';
 import GoalCard from './GoalCard';
+import mockData from '../../../data/dados.json'; // Certifique-se de que o caminho para o arquivo JSON está correto
 
 const initialGoalState = {
-  image: '',
   name: '',
   totalBooks: 0,
   progress: 0,
-  startDate: '',
-  endDate: '',
+  progressPercentage: 0,
   status: 'Em andamento',
 };
 
 const GoalPage = ({ books }) => {
-  const [goals, setGoals] = useState([]);
+  const [goals, setGoals] = useState(mockData.goals || []);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newGoal, setNewGoal] = useState(initialGoalState);
   const [statusInput, setStatusInput] = useState('');
@@ -22,8 +21,8 @@ const GoalPage = ({ books }) => {
   const imageInputRef = useRef(null);
 
   useEffect(() => {
-    const savedGoals = JSON.parse(localStorage.getItem('goals')) || [];
-    setGoals(savedGoals);
+    const savedGoals = JSON.parse(localStorage.getItem('goals'));
+    setGoals(Array.isArray(savedGoals) ? savedGoals : mockData.goals);
   }, []);
 
   const saveGoalsToLocalStorage = (updatedGoals) => {
@@ -60,15 +59,6 @@ const GoalPage = ({ books }) => {
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setNewGoal((prevGoal) => ({ ...prevGoal, [name]: value }));
-  };
-
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => setNewGoal((prevGoal) => ({ ...prevGoal, image: reader.result }));
-      reader.readAsDataURL(file);
-    }
   };
 
   const updateGoalProgress = (goalId) => {
@@ -115,23 +105,6 @@ const GoalPage = ({ books }) => {
               <button className="modal-close" onClick={closeModal}>X</button>
 
               <div style={{ display: 'flex', gap: '20px' }}>
-                <div className="modal-left">
-                  <input
-                    type="file"
-                    accept="image/*"
-                    name="image"
-                    onChange={handleImageChange}
-                    style={{ display: 'none' }}
-                    ref={imageInputRef}
-                  />
-                  <button className="add-image-button" onClick={() => imageInputRef.current.click()}>
-                    🖼️ Capa
-                  </button>
-                  {newGoal.image && (
-                    <img src={newGoal.image} alt="Preview" style={{ width: '100px', height: '100px' }} />
-                  )}
-                </div>
-
                 <div className="modal-right">
                   <label>Nome da Meta</label>
                   <input
@@ -149,22 +122,6 @@ const GoalPage = ({ books }) => {
                     value={newGoal.totalBooks}
                     onChange={handleInputChange}
                     placeholder="Total de livros"
-                  />
-
-                  <label>Data de Início</label>
-                  <input
-                    type="date"
-                    name="startDate"
-                    value={newGoal.startDate}
-                    onChange={handleInputChange}
-                  />
-
-                  <label>Data de Término</label>
-                  <input
-                    type="date"
-                    name="endDate"
-                    value={newGoal.endDate}
-                    onChange={handleInputChange}
                   />
 
                   <div className="form-group">

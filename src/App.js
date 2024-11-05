@@ -13,7 +13,12 @@ function App() {
   const [profileImage, setProfileImage] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [userQuote, setUserQuote] = useState("");
-  const [books, setBooks] = useState([]);
+
+  const [books, setBooks] = useState(() => {
+    const savedBooks = JSON.parse(localStorage.getItem("books"));
+    return savedBooks || mockData.books;
+  });
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isColorModalOpen, setIsColorModalOpen] = useState(false);
   const [currentScreen, setCurrentScreen] = useState("home");
@@ -32,6 +37,8 @@ function App() {
   const [fonteTamanhoNormal, setFonteTamanhoNormal] = useState("16px");
   const [fonteTamanhoMedio, setFonteTamanhoMedio] = useState("20px");
   const [fonteTamanhoGrande, setFonteTamanhoGrande] = useState("24px");
+
+ 
 
   useEffect(() => {
     const savedGoals = JSON.parse(localStorage.getItem("goals")) || [];
@@ -66,10 +73,10 @@ function App() {
     }
   };
 
-  useEffect(() => {
-    const savedBooks = JSON.parse(localStorage.getItem("books")) || [];
-    setBooks(savedBooks);
-  }, []);
+  // useEffect(() => {
+  //   const savedBooks = JSON.parse(localStorage.getItem("books")) || [];
+  //   setBooks(savedBooks);
+  // }, []);
 
   const updateBook = (updatedBook) => {
     setBooks((prevBooks) => {
@@ -209,7 +216,7 @@ function App() {
           />
         );
       case "metas":
-        return <GoalPage books={mockData.books} goals={goals} addGoal={addGoal} />;
+        return <GoalPage books={books} goals={goals} addGoal={addGoal} />;
       case "genres":
         return <Genre books={books} />;
       default:
@@ -234,6 +241,7 @@ function App() {
         );
     }
   };
+
 
   return (
     <div className="app-container">

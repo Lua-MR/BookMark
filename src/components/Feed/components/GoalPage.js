@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import GoalCard from './GoalCard';
-import mockData from '../../../data/dados.json'; // Certifique-se de que o caminho para o arquivo JSON está correto
+import mockData from '../../../data/dados.json';
 
 const initialGoalState = {
   name: '',
@@ -8,6 +8,8 @@ const initialGoalState = {
   progress: 0,
   progressPercentage: 0,
   status: 'Em andamento',
+  books: [], // Lista para armazenar livros associados à meta
+  image: null
 };
 
 const GoalPage = ({ books }) => {
@@ -67,6 +69,7 @@ const GoalPage = ({ books }) => {
           progress,
           progressPercentage,
           status: progress >= goal.totalBooks ? 'Concluído' : 'Em andamento',
+          books: booksInGoal
         };
       }
       return goal;
@@ -98,9 +101,26 @@ const GoalPage = ({ books }) => {
       <h1>Metas de Leitura</h1>
       <div className="book-list">
         {goals.length > 0 ? (
-          goals.map((goal) => (
-            <GoalCard key={goal.id} goal={goal} onClose={() => removeGoal(goal.id)} />
-          ))
+          goals.map((goal) => {
+            const booksInGoal = books.filter(book => book.goal === goal.id);
+            const completedBooksCount = booksInGoal.filter(book => book.currentPage === book.totalPages).length;
+
+            return (
+              <div key={goal.id} className="goal-card">
+                <button className="card-close" onClick={() => removeGoal(goal.id)} aria-label="Close card">X</button>
+                <h2>{goal.name}</h2>
+                <p>Total de Livros: {booksInGoal.length}</p>
+                <p>Concluídos: {completedBooksCount}</p>
+                <ul>
+                  {booksInGoal.map((book) => (
+                    <li key={book.id}>
+                      <strong>{book.name}</strong> por {book.author}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            );
+          })
         ) : (
           <p>Nenhuma meta adicionada ainda</p>
         )}

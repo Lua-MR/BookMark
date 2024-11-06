@@ -56,11 +56,6 @@ const GoalPage = ({ books }) => {
     closeModal();
   };
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setNewGoal((prevGoal) => ({ ...prevGoal, [name]: value }));
-  };
-
   const updateGoalProgress = (goalId) => {
     const updatedGoals = goals.map((goal) => {
       if (goal.id === goalId) {

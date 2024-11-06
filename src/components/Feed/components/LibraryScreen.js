@@ -56,10 +56,16 @@ const LibraryScreen = ({
     }
   }, [activeTab]);
 
-  // const filteredBooks = books.filter(book => book?.name?.toLowerCase().includes(searchQuery.toLowerCase()));
-  const filteredBooks = dados.books.filter((book) =>
+  
+  const filteredBooksData = dados.books.filter((book) =>
     book?.name?.toLowerCase().includes(searchQuery.toLowerCase())
   );
+
+  const filteredBooks = books.filter((book) =>
+    book?.name?.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+  
+  const combinedBooks = [...filteredBooks, ...filteredBooksData];
 
   const sortBooks = (books) => {
     if (!sortCriteria) return books;
@@ -97,7 +103,7 @@ const LibraryScreen = ({
     });
   };
 
-  const sortedBooks = sortBooks(filteredBooks);
+  const sortedBooks = sortBooks(combinedBooks);
 
   const enrichedBooks = sortedBooks.map((book) => {
     const bookGoal = goals.find(

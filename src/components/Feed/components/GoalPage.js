@@ -105,6 +105,23 @@ const GoalPage = ({ books }) => {
               <button className="modal-close" onClick={closeModal}>X</button>
 
               <div style={{ display: 'flex', gap: '20px' }}>
+                <div className="modal-left">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    name="image"
+                    onChange={handleImageChange}
+                    style={{ display: 'none' }}
+                    ref={imageInputRef}
+                  />
+                  <button className="add-image-button" onClick={() => imageInputRef.current.click()}>
+                    🖼️ Capa
+                  </button>
+                  {newGoal.image && (
+                    <img src={newGoal.image} alt="Preview" style={{ width: '100px', height: '100px' }} />
+                  )}
+                </div>
+
                 <div className="modal-right">
                   <label>Nome da Meta</label>
                   <input
@@ -122,6 +139,22 @@ const GoalPage = ({ books }) => {
                     value={newGoal.totalBooks}
                     onChange={handleInputChange}
                     placeholder="Total de livros"
+                  />
+
+                  <label>Data de Início</label>
+                  <input
+                    type="date"
+                    name="startDate"
+                    value={newGoal.startDate}
+                    onChange={handleInputChange}
+                  />
+
+                  <label>Data de Término</label>
+                  <input
+                    type="date"
+                    name="endDate"
+                    value={newGoal.endDate}
+                    onChange={handleInputChange}
                   />
 
                   <div className="form-group">

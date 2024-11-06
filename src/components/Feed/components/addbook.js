@@ -205,7 +205,6 @@ const AddBook = ({ addBook, goals = [], updateGoalBookCount }) => {
             goalName: goalObject ? goalObject.name : "Sem meta definida", 
         };
         
-    
         const { startDate, endDate } = bookData;
         const newHighlightedDays = [];
     
@@ -228,9 +227,11 @@ const AddBook = ({ addBook, goals = [], updateGoalBookCount }) => {
             updateGoalBookCount(selectedGoalId, isBookComplete, bookData.name); 
         }
     
+        setHighlightedDays((prevDays) => [...prevDays, ...newHighlightedDays]);
+    
         resetForm();
     };
-
+    
     const resetForm = () => {
         setBookData({
             id: '',

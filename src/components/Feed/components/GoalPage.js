@@ -3,17 +3,17 @@ import GoalCard from './GoalCard';
 import mockData from '../../../data/dados.json';
 
 const initialGoalState = {
+  image: '',
   name: '',
   totalBooks: 0,
   progress: 0,
-  progressPercentage: 0,
+  startDate: '',
+  endDate: '',
   status: 'Em andamento',
-  books: [], // Lista para armazenar livros associados à meta
-  image: null
 };
 
 const GoalPage = ({ books }) => {
-  const [goals, setGoals] = useState(mockData.goals || []);
+  const [goals, setGoals] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newGoal, setNewGoal] = useState(initialGoalState);
   const [statusInput, setStatusInput] = useState('');
@@ -23,8 +23,8 @@ const GoalPage = ({ books }) => {
   const imageInputRef = useRef(null);
 
   useEffect(() => {
-    const savedGoals = JSON.parse(localStorage.getItem('goals'));
-    setGoals(Array.isArray(savedGoals) ? savedGoals : mockData.goals);
+    const savedGoals = JSON.parse(localStorage.getItem('goals')) || [];
+    setGoals(savedGoals);
   }, []);
 
   const saveGoalsToLocalStorage = (updatedGoals) => {
@@ -38,7 +38,7 @@ const GoalPage = ({ books }) => {
   };
 
   const openModal = () => setIsModalOpen(true);
-  
+
   const closeModal = () => {
     setIsModalOpen(false);
     resetNewGoal();
@@ -58,30 +58,6 @@ const GoalPage = ({ books }) => {
     closeModal();
   };
 
-  const updateGoalProgress = (goalId) => {
-    const updatedGoals = goals.map((goal) => {
-      if (goal.id === goalId) {
-        const booksInGoal = books.filter((book) => book.goal === goalId);
-        const progress = booksInGoal.length;
-        const progressPercentage = (progress / goal.totalBooks) * 100;
-        return {
-          ...goal,
-          progress,
-          progressPercentage,
-          status: progress >= goal.totalBooks ? 'Concluído' : 'Em andamento',
-          books: booksInGoal
-        };
-      }
-      return goal;
-    });
-    setGoals(updatedGoals);
-    saveGoalsToLocalStorage(updatedGoals);
-  };
-
-  useEffect(() => {
-    goals.forEach((goal) => updateGoalProgress(goal.id));
-  }, [books]);
-
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setNewGoal((prevGoal) => ({ ...prevGoal, [name]: value }));
@@ -95,6 +71,30 @@ const GoalPage = ({ books }) => {
       reader.readAsDataURL(file);
     }
   };
+
+  const updateGoalProgress = (goalId) => {
+    const updatedGoals = goals.map((goal) => {
+      if (goal.id === goalId) {
+        const booksInGoal = books.filter((book) => book.goal === goalId);
+        const progress = booksInGoal.length;
+        const progressPercentage = (progress / goal.totalBooks) * 100;
+        return {
+          ...goal,
+          progress,
+          progressPercentage,
+          status: progress >= goal.totalBooks ? 'Concluído' : 'Em andamento',
+          books: booksInGoal // Associar os livros à meta
+        };
+      }
+      return goal;
+    });
+    setGoals(updatedGoals);
+    saveGoalsToLocalStorage(updatedGoals);
+  };
+
+  useEffect(() => {
+    goals.forEach((goal) => updateGoalProgress(goal.id));
+  }, [books]);
 
   return (
     <div className="library-screen">

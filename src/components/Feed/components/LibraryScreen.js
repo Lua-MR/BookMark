@@ -56,6 +56,10 @@ const LibraryScreen = ({
     }
   }, [activeTab]);
 
+  useEffect(() => {
+    setAllBooks([...books, ...dados.books]);
+  }, [books, dados.books]);
+
   
   const filteredBooksData = dados.books.filter((book) =>
     book?.name?.toLowerCase().includes(searchQuery.toLowerCase())

@@ -127,6 +127,8 @@ const LibraryScreen = ({
 
   const handleDeleteBook = (bookId) => {
     onDeleteBook(bookId);
+    dados.books = dados.books.filter((book) => book.id !== bookId);
+    setAllBooks([...books, ...dados.books]);
   };
 
   const handleAddBook = () => {

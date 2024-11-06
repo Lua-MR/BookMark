@@ -65,13 +65,31 @@ function App() {
   const addBook = (newBook) => {
     setBooks((prevBooks) => {
       const updatedBooks = [...prevBooks, newBook];
-      saveBooksToLocalStorage(updatedBooks); // Salvar no localStorage
+      saveBooksToLocalStorage(updatedBooks);
       return updatedBooks;
     });
+
+    if (newBook.startDate && newBook.endDate) {
+      updateHighlightedDays(newBook.startDate, newBook.endDate);
+    }
+
     if (newBook.goal) {
       updateGoalProgress(newBook.goal);
     }
   };
+
+  const updateHighlightedDays = (startDate, endDate) => {
+    const newHighlightedDays = [];
+    const start = new Date(startDate + "T00:00:00");
+    const end = new Date(endDate + "T23:59:59");
+
+    for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
+      newHighlightedDays.push(d.toISOString().split("T")[0]);
+    }
+
+    setHighlightedDays((prevDays) => [...new Set([...prevDays, ...newHighlightedDays])]);
+  };
+
 
   // useEffect(() => {
   //   const savedBooks = JSON.parse(localStorage.getItem("books")) || [];

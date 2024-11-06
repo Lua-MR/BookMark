@@ -84,6 +84,20 @@ const GoalPage = ({ books }) => {
     goals.forEach((goal) => updateGoalProgress(goal.id));
   }, [books]);
 
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setNewGoal((prevGoal) => ({ ...prevGoal, [name]: value }));
+  };
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => setNewGoal((prevGoal) => ({ ...prevGoal, image: reader.result }));
+      reader.readAsDataURL(file);
+    }
+  };
+
   return (
     <div className="library-screen">
       <h1>Metas de Leitura</h1>

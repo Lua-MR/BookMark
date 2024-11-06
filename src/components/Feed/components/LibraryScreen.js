@@ -21,6 +21,7 @@ const LibraryScreen = ({
   const [selectedFields, setSelectedFields] = useState([]);
   const [sortCriteria, setSortCriteria] = useState("");
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
+  const [allBooks, setAllBooks] = useState([...books, ...dados.books]);
   const [selectedBook, setSelectedBook] = useState(null);
   const [newBook, setNewBook] = useState({
     name: "",
@@ -60,7 +61,7 @@ const LibraryScreen = ({
     setAllBooks([...books, ...dados.books]);
   }, [books, dados.books]);
 
-  
+
   const filteredBooksData = dados.books.filter((book) =>
     book?.name?.toLowerCase().includes(searchQuery.toLowerCase())
   );

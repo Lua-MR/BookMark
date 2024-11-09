@@ -1,9 +1,9 @@
 import React from 'react';
 
-const BookGallery = ({ books, goals = [], onBookClick, fields = [] }) => {
+const BookGallery = ({ books, onBookClick, fields = [] }) => { 
   return (
-    <div className="book-gallery">
-      {books.length === 0 ? (
+    <div className="book-list">
+       {books.length === 0 ? (
         <div className="no-books-message">Nenhum livro encontrado</div>
       ) : (
         books.map((book) => {

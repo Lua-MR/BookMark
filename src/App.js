@@ -10,7 +10,6 @@ import "./estilo.css";
 import mockData from './data/dados.json';
 
 function App() {
-  function App() {
   const [profileImage, setProfileImage] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [userQuote, setUserQuote] = useState("");
@@ -231,41 +230,6 @@ function App() {
     setIsColorModalOpen(false);
   };
 
-  const applyColors = () => {
-    document.documentElement.style.setProperty(
-      "--cor-fundo-principal",
-      corFundoPrincipal
-    );
-    document.documentElement.style.setProperty(
-      "--cor-texto-principal",
-      corTextoPrincipal
-    );
-    document.documentElement.style.setProperty(
-      "--cor-fundo-secundaria",
-      corFundoSecundaria
-    );
-    document.documentElement.style.setProperty("--cor-contraste", corContraste);
-    document.documentElement.style.setProperty("--cor-terciaria", corTerciaria);
-
-    document.documentElement.style.setProperty(
-      "--fonte-tamanho-pequeno",
-      fonteTamanhoPequeno
-    );
-    document.documentElement.style.setProperty(
-      "--fonte-tamanho-normal",
-      fonteTamanhoNormal
-    );
-    document.documentElement.style.setProperty(
-      "--fonte-tamanho-medio",
-      fonteTamanhoMedio
-    );
-    document.documentElement.style.setProperty(
-      "--fonte-tamanho-grande",
-      fonteTamanhoGrande
-    );
-
-    closeColorModal();
-  };
 
   const renderContent = () => {
     switch (currentScreen) {

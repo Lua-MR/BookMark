@@ -337,6 +337,7 @@ const LibraryScreen = ({
             onUpdate={handleUpdateBook}
             onDelete={handleDeleteBook}
             onClose={closeUpdateModal}
+          goals={goals}
           />
         )}
       </div>

@@ -98,8 +98,8 @@ const LibraryScreen = ({
           return a.file ? 1 : -1;
         case "rating":
           return a.rating - b.rating;
-        case "goal": // Adicionando o critério de ordenação "meta"
-          return a.goalName.localeCompare(b.goalName);
+        case "goal": 
+          return (a.goalName || "").localeCompare(b.goalName || "");
         default:
           return 0;
       }
@@ -295,11 +295,11 @@ const LibraryScreen = ({
 
       <div className="tab-content">
         {activeTab === "galeria" && (
-          <BookGallery books={sortedBooks} onBookClick={handleBookClick} />
+          <BookGallery books={enrichedBooks} onBookClick={handleBookClick} />
         )}
         {activeTab === "lista" && (
           <BookList
-            books={sortedBooks}
+            books={enrichedBooks}
             fields={defaultListFields}
             goals={goals}
             onBookClick={handleBookClick}
@@ -311,13 +311,13 @@ const LibraryScreen = ({
               <div key={tab.id} className="custom-tab-content">
                 {tab.type === "card" ? (
                   <BookGallery
-                    books={sortedBooks}
+                    books={enrichedBooks}
                     fields={tab.fields}
                     onBookClick={handleBookClick}
                   />
                 ) : (
                   <BookList
-                    books={sortedBooks}
+                    books={enrichedBooks}
                     fields={tab.fields || []}
                     goals={goals}
                     onBookClick={handleBookClick}

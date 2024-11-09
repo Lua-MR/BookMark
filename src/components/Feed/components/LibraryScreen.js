@@ -11,8 +11,8 @@ const LibraryScreen = ({
   addNewBook,
   onUpdateBook,
   onDeleteBook,
+  goals = [],
 }) => {
-  const [goals, setGoals] = useState([]);
   const [activeTab, setActiveTab] = useState("galeria");
   const [customTabs, setCustomTabs] = useState([]);
   const [isConfigModalOpen, setIsConfigModalOpen] = useState(false);
@@ -31,13 +31,10 @@ const LibraryScreen = ({
     currentPage: 0,
   });
 
-
   useEffect(() => {
     try {
-      const savedGoals = JSON.parse(localStorage.getItem("goals")) || [];
       const savedTabs = JSON.parse(localStorage.getItem("customTabs")) || [];
       const savedActiveTab = localStorage.getItem("activeTab") || "galeria";
-      setGoals(savedGoals);
       setCustomTabs(savedTabs);
       setActiveTab(savedActiveTab);
     } catch (error) {
@@ -59,8 +56,7 @@ const LibraryScreen = ({
 
   useEffect(() => {
     setAllBooks([...books, ...dados.books]);
-  }, [books, dados.books]);
-
+  }, [books]);
 
   const filteredBooksData = dados.books.filter((book) =>
     book?.name?.toLowerCase().includes(searchQuery.toLowerCase())
@@ -102,6 +98,8 @@ const LibraryScreen = ({
           return a.file ? 1 : -1;
         case "rating":
           return a.rating - b.rating;
+        case "goal": // Adicionando o critério de ordenação "meta"
+          return a.goalName.localeCompare(b.goalName);
         default:
           return 0;
       }
@@ -235,9 +233,7 @@ const LibraryScreen = ({
     <div className="library-screen">
       <div className="tabs">
         <button
-          className={`tab-button ${
-            activeTab === "galeria" ? "active-tab" : ""
-          }`}
+          className={`tab-button ${activeTab === "galeria" ? "active-tab" : ""}`}
           onClick={() => changeActiveTab("galeria")}
         >
           Galeria
@@ -292,6 +288,7 @@ const LibraryScreen = ({
             <option value="property">Propriedade</option>
             <option value="file">Arquivo</option>
             <option value="rating">Avaliação</option>
+            <option value="goal">Meta</option>
           </select>
         </label>
       </div>
@@ -337,7 +334,7 @@ const LibraryScreen = ({
             onUpdate={handleUpdateBook}
             onDelete={handleDeleteBook}
             onClose={closeUpdateModal}
-          goals={goals}
+            goals={goals}
           />
         )}
       </div>
@@ -406,6 +403,7 @@ const LibraryScreen = ({
                   "propriedade",
                   "arquivo",
                   "avaliacao",
+                  "meta",
                 ].map((field) => (
                   <label key={field}>
                     <input

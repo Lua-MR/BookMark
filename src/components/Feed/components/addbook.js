@@ -204,7 +204,7 @@ const AddBook = ({ addBook, goals = [], updateGoalBookCount }) => {
             goal: selectedGoalId,
             goalName: goalObject ? goalObject.name : "Sem meta definida", 
         };
-        
+    
         const { startDate, endDate } = bookData;
         const newHighlightedDays = [];
     
@@ -212,7 +212,7 @@ const AddBook = ({ addBook, goals = [], updateGoalBookCount }) => {
         const parsedEndDate = new Date(endDate + "T23:59:59");
     
         if (parsedStartDate > parsedEndDate) {
-            console.error("Data de Início é posterior à Data de Término");
+            alert("Erro: A data de início não pode ser posterior à data de término.");
             return;
         }
     

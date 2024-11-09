@@ -29,6 +29,14 @@ const UpdateBook = ({ book, onUpdate, onDelete, onClose, goals = [] }) => {
     const [editoraOptions, setEditoraOptions] = useState([]);
 
     useEffect(() => {
+        // Log to check if goals are passed correctly
+        console.log("Goals passed to UpdateBook:", goals);
+        // Set the selected goal ID if it exists in the book data
+        setSelectedGoalId(book.goal || '');
+    }, [book, goals]);
+
+
+    useEffect(() => {
         const savedRatings = JSON.parse(localStorage.getItem('ratingsOptions')) || ['1', '2', '3', '4', '5'];
         setRatings(savedRatings);
 

@@ -18,7 +18,7 @@ const Calendar = ({ highlightedDays }) => {
     const getDaysOfWeek = () => ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab'];
 
     const renderDay = (day) => {
-        const dateString = day.toISOString().split('T')[0]; // YYYY-MM-DD
+        const dateString = day.toISOString().split('T')[0]; // Formato YYYY-MM-DD
         const isHighlighted = highlightedDays.includes(dateString);
         
         const dayClass = isHighlighted ? 'highlighted-day' : 'regular-day';

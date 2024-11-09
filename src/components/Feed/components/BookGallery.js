@@ -1,6 +1,6 @@
 import React from 'react';
 
-const BookGallery = ({ books, onBookClick, fields = [] }) => { 
+const BookGallery = ({ books, goals = [], onBookClick, fields = [] }) => { 
   return (
     <div className="book-list">
        {books.length === 0 ? (

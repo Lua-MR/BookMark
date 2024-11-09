@@ -13,14 +13,6 @@ const UpdateBook = ({ book, onUpdate, onDelete, onClose, goals = [] }) => {
     const [isPropInputVisible, setIsPropInputVisible] = useState(false);
     const [isEditoraInputVisible, setIsEditoraInputVisible] = useState(false);
 
-    const [ratingInput, setRatingInput] = useState('');
-    const [statusInput, setStatusInput] = useState('');
-    const [genreInput, setGenreInput] = useState('');
-    const [typeInput, setTypeInput] = useState('');
-    const [propInput, setPropInput] = useState('');
-    const [editoraInput, setEditoraInput] = useState('');
-
- 
     const [ratings, setRatings] = useState([]);
     const [statusOptions, setStatusOptions] = useState([]);
     const [genreOptions, setGenreOptions] = useState([]);
@@ -29,12 +21,9 @@ const UpdateBook = ({ book, onUpdate, onDelete, onClose, goals = [] }) => {
     const [editoraOptions, setEditoraOptions] = useState([]);
 
     useEffect(() => {
-        // Log to check if goals are passed correctly
         console.log("Goals passed to UpdateBook:", goals);
-        // Set the selected goal ID if it exists in the book data
         setSelectedGoalId(book.goal || '');
     }, [book, goals]);
-
 
     useEffect(() => {
         const savedRatings = JSON.parse(localStorage.getItem('ratingsOptions')) || ['1', '2', '3', '4', '5'];
@@ -55,14 +44,6 @@ const UpdateBook = ({ book, onUpdate, onDelete, onClose, goals = [] }) => {
         const savedEditoras = JSON.parse(localStorage.getItem('editoraOptions')) || ['Intrínseca', 'Seguinte', 'Rocco'];
         setEditoraOptions(savedEditoras);
     }, []);
-
-    useEffect(() => {
-        if (book.goal) {
-            setSelectedGoalId(book.goal);
-        } else {
-            setSelectedGoalId(''); 
-        }
-    }, [book]);
 
     const handleSave = () => {
         const { startDate, endDate } = updatedBook;
@@ -92,14 +73,12 @@ const UpdateBook = ({ book, onUpdate, onDelete, onClose, goals = [] }) => {
         onDelete(book.id);
         onClose();
     };
- 
-    
+
     const handleGoalChange = (e) => {
         const selectedId = e.target.value;
         setSelectedGoalId(selectedId);
         setUpdatedBook((prev) => ({ ...prev, goal: selectedId }));
     };
-
 
     const handleImageChange = (e) => {
         const file = e.target.files[0];
@@ -116,19 +95,7 @@ const UpdateBook = ({ book, onUpdate, onDelete, onClose, goals = [] }) => {
         const { name, value } = e.target;
         setUpdatedBook((prev) => ({ ...prev, [name]: value }));
     };
-    const handleOptionSave = (e, input, options, setOptions, key, storageKey) => {
-        if (e.key === 'Enter') {
-            const newValue = input.trim();
-            if (newValue && !options.includes(newValue)) {
-                const updatedOptions = [...options, newValue];
-                setOptions(updatedOptions);
-                setUpdatedBook((prevData) => ({ ...prevData, [key]: newValue })); 
-                localStorage.setItem(storageKey, JSON.stringify(updatedOptions));
-            }
-            e.preventDefault();
-        }
-    };
-    
+
     return (
         <div className="modal">
             <div className="modal-content">
@@ -149,35 +116,19 @@ const UpdateBook = ({ book, onUpdate, onDelete, onClose, goals = [] }) => {
                     {updatedBook.image && (
                         <img src={updatedBook.image} alt="Capa do Livro" style={{ width: '90%', height: 'auto', marginBottom: '10px' }} />
                     )}
-                   {/* Rating input */}
-<input
-    className="rating-input"
-    type="text"
-    placeholder="Nota"
-    value={updatedBook.rating}
-    onChange={(e) => setUpdatedBook((prevData) => ({ ...prevData, rating: e.target.value }))}
-    onFocus={() => setIsRatingInputVisible(true)}
-    onBlur={() => setTimeout(() => setIsRatingInputVisible(false), 100)}
-    onKeyDown={(e) => handleOptionSave(e, updatedBook.rating, ratings, setRatings, 'rating', 'ratingsOptions')}
-    style={{ marginBottom: '10px' }}
-/>
-{isRatingInputVisible && (
-    <ul className="rating-list">
-        {ratings.map((option, index) => (
-            <li
-                key={index}
-                onClick={() => {
-                    setUpdatedBook((prevData) => ({ ...prevData, rating: option }));
-                    setIsRatingInputVisible(false);
-                }}
-            >
-                {option}
-            </li>
-        ))}
-    </ul>
-)}
 
-                    {/* Example: Status Input */}
+                    <label>Meta:
+                        <select value={selectedGoalId} onChange={handleGoalChange} style={{ marginBottom: '10px', width: '100%' }}>
+                            <option value="">Selecione uma Meta</option>
+                            {goals.map((goal) => (
+                                <option key={goal.id} value={goal.id}>
+                                    {goal.name}
+                                </option>
+                            ))}
+                        </select>
+                    </label>
+
+                    {/* Other Inputs like Status, Genre, and others */}
                     <input
                         className="status-input"
                         type="text"
@@ -189,35 +140,10 @@ const UpdateBook = ({ book, onUpdate, onDelete, onClose, goals = [] }) => {
                         onKeyDown={(e) => handleOptionSave(e, updatedBook.status, statusOptions, setStatusOptions, 'status', 'statusOptions')}
                         style={{ marginBottom: '10px' }}
                     />
-                    {isStatusInputVisible && (
-                        <ul className="status-list">
-                            {statusOptions.map((option, index) => (
-                                <li
-                                    key={index}
-                                    onClick={() => {
-                                        setUpdatedBook((prevData) => ({ ...prevData, status: option }));
-                                        setStatusInput(option);
-                                        setIsStatusInputVisible(false);
-                                    }}
-                                >
-                                    {option}
-                                </li>
-                            ))}
-                        </ul>
-                    )}
-                       <label>Meta:
-    <select value={selectedGoalId} onChange={handleGoalChange} style={{ marginBottom: '10px', width: '100%' }}>
-        <option value="">Selecione uma Meta</option>
-        {goals.map((goal) => (
-            <option key={goal.id} value={goal.id}>
-                {goal.name}
-            </option>
-        ))}
-    </select>
-</label>
+                    {/*... other components ...*/}
+                </div>
 
-        </div>
-        <div className="modal-right">
+                <div className="modal-right">
                     {/* Text Inputs */}
                     <label>Nome:
                         <input
@@ -241,203 +167,12 @@ const UpdateBook = ({ book, onUpdate, onDelete, onClose, goals = [] }) => {
                         />
                     </label>
 
-                    {/* Number Inputs */}
-                    <div className="input-group">
-                        <label>Páginas atuais:
-                            <input
-                                type="number"
-                                name="currentPage"
-                                value={updatedBook.currentPage}
-                                onChange={(e) => setUpdatedBook({ ...updatedBook, currentPage: e.target.value })}
-                                style={{ marginBottom: '10px', width: '75%' }}
-                            />
-                        </label>
-                        <label>Páginas totais:
-                            <input
-                                type="number"
-                                name="totalPages"
-                                value={updatedBook.totalPages}
-                                onChange={(e) => setUpdatedBook({ ...updatedBook, totalPages: e.target.value })}
-                                style={{ marginBottom: '10px', width: '75%' }}
-                            />
-                        </label>
-                    </div>
-
-                    {/* Date Inputs */}
-                    <div className="input-group">
-                        <label>Data de início:
-                            <input
-                                type="date"
-                                name="startDate"
-                                value={updatedBook.startDate}
-                                onChange={(e) => setUpdatedBook({ ...updatedBook, startDate: e.target.value })}
-                                style={{ marginBottom: '10px', width: '75%' }}
-                            />
-                        </label>
-                        <label>Data de término:
-                            <input
-                                type="date"
-                                name="endDate"
-                                value={updatedBook.endDate}
-                                onChange={(e) => setUpdatedBook({ ...updatedBook, endDate: e.target.value })}
-                                style={{ marginBottom: '10px', width: '75%' }}
-                            />
-                        </label>
-                    </div>
-
-                    <div className="input-group">
-         {/* Dropdown-like Inputs */}
-         <input
-                        className="editora-input"
-                        type="text"
-                        placeholder="Editora"
-                        value={updatedBook.publisher}
-                        onChange={(e) => setUpdatedBook({ ...updatedBook, publisher: e.target.value })}
-                        onFocus={() => setIsEditoraInputVisible(true)}
-                        onBlur={() => setTimeout(() => setIsEditoraInputVisible(false), 100)}
-                        onKeyDown={(e) => handleOptionSave(e, updatedBook.publisher, editoraOptions, setEditoraOptions, 'publisher', 'editoraOptions')}
-                        style={{ marginBottom: '10px' }}
-                    />
-                    {isEditoraInputVisible && (
-                        <ul className="editora-list">
-                            {editoraOptions.map((option, index) => (
-                                <li
-                                    key={index}
-                                    onClick={() => {
-                                        setUpdatedBook((prevData) => ({ ...prevData, publisher: option }));
-                                        setIsEditoraInputVisible(false);
-                                    }}
-                                >
-                                    {option}
-                                </li>
-                            ))}
-                        </ul>
-                    )}
-                    <input
-                        type="text"
-                        placeholder="ISBN"
-                        name="isbn"
-                        value={updatedBook.isbn}
-                        onChange={handleChange}
-                        required
-                        style={{ marginBottom: '10px',  width: '50%'}}
-                    />
-                </div>
-                <div className="input-group">
-                <input
-    className="genre-input"
-    type="text"
-    placeholder="Gênero"
-    value={updatedBook.genre} 
-    onChange={(e) => setUpdatedBook((prevData) => ({ ...prevData, genre: e.target.value }))} 
-    onFocus={() => setIsGenreInputVisible(true)}
-    onBlur={() => setTimeout(() => setIsGenreInputVisible(false), 100)}
-    onKeyDown={(e) => handleOptionSave(e, updatedBook.genre, genreOptions, setGenreOptions, 'genre', 'genreOptions')}
-    style={{ marginBottom: '10px' }}
-/>
-{isGenreInputVisible && (
-    <ul className="genre-list">
-        {genreOptions.map((option, index) => (
-            <li
-                key={index}
-                onClick={() => {
-                    setUpdatedBook((prevData) => ({ ...prevData, genre: option })); 
-                    setIsGenreInputVisible(false);
-                }}
-            >
-                {option}
-            </li>
-        ))}
-    </ul>
-)}</div>
-   <div className="input-group">
-<input
-    className="type-input"
-    type="text"
-    placeholder="Tipo"
-    value={updatedBook.type}
-    onChange={(e) => setUpdatedBook((prevData) => ({ ...prevData, type: e.target.value }))}
-    onFocus={() => setIsTypeInputVisible(true)}
-    onBlur={() => setTimeout(() => setIsTypeInputVisible(false), 100)}
-    onKeyDown={(e) => handleOptionSave(e, updatedBook.type, typeOptions, setTypeOptions, 'type', 'typeOptions')}
-    style={{ marginBottom: '10px' }}
-/>
-{isTypeInputVisible && (
-    <ul className="type-list">
-        {typeOptions.map((option, index) => (
-            <li
-                key={index}
-                onClick={() => {
-                    setUpdatedBook((prevData) => ({ ...prevData, type: option }));
-                    setIsTypeInputVisible(false);
-                }}
-            >
-                {option}
-            </li>
-        ))}
-    </ul>
-)}
-</div>
-<div className="input-group">
-<input
-    className="prop-input"
-    type="text"
-    placeholder="Propriedade"
-    value={updatedBook.prop}
-    onChange={(e) => setUpdatedBook((prevData) => ({ ...prevData, prop: e.target.value }))}
-    onFocus={() => setIsPropInputVisible(true)}
-    onBlur={() => setTimeout(() => setIsPropInputVisible(false), 100)}
-    onKeyDown={(e) => handleOptionSave(e, updatedBook.prop, propOptions, setPropOptions, 'prop', 'propOptions')}
-    style={{ marginBottom: '10px' }}
-/>
-{isPropInputVisible && (
-    <ul className="prop-list">
-        {propOptions.map((option, index) => (
-            <li
-                key={index}
-                onClick={() => {
-                    setUpdatedBook((prevData) => ({ ...prevData, prop: option }));
-                    setIsPropInputVisible(false);
-                }}
-            >
-                {option}
-            </li>
-        ))}
-    </ul>
-)}
-</div>
-<button
-    className="add-arquivo-button"
-    onClick={handleFileInputClick}
->
-    📁 Arquivo
-</button>
-<input
-    type="file"
-    accept=".pdf, .epub"
-    name="file"
-    onChange={handleChange}
-    ref={fileInputRef}
-    style={{ display: 'none' }}
-/>
-
-<textarea
-    placeholder="Resenha"
-    name="review"
-    value={updatedBook.review}
-    onChange={handleChange}
-    style={{ marginBottom: '10px', width: '100%' }}
-/>
-
-<div className="input-group">
-    <button onClick={handleDelete} style={{ marginBottom: '10px', marginLeft: 'auto', display: 'block' }}>Deletar</button>
-    <button onClick={handleSave} style={{ marginBottom: '10px', marginLeft: 'auto', display: 'block' }}>Salvar</button>
-</div>
-         </div> 
-         </div>
-    
-   </div>
-  );
+                    <button onClick={handleDelete} style={{ marginBottom: '10px', marginLeft: 'auto', display: 'block' }}>Deletar</button>
+                    <button onClick={handleSave} style={{ marginBottom: '10px', marginLeft: 'auto', display: 'block' }}>Salvar</button>
+                </div> 
+            </div>
+        </div>
+    );
 };
 
 export default UpdateBook;

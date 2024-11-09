@@ -297,7 +297,7 @@ function App() {
 
       {currentScreen !== "home" && (
         <div className="top-menu">
-          <a onClick={() => setCurrentScreen("home")}>Inicio</a>
+         <a onClick={() => window.location.reload()}>Inicio</a>
           <a onClick={() => setCurrentScreen("genres")}>Gêneros</a>
           <a onClick={() => setCurrentScreen("metas")}>Metas</a>
         </div>

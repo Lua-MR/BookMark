@@ -10,6 +10,7 @@ import "./estilo.css";
 import mockData from './data/dados.json';
 
 function App() {
+  function App() {
   const [profileImage, setProfileImage] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [userQuote, setUserQuote] = useState("");
@@ -38,13 +39,39 @@ function App() {
   const [fonteTamanhoMedio, setFonteTamanhoMedio] = useState("20px");
   const [fonteTamanhoGrande, setFonteTamanhoGrande] = useState("24px");
 
- 
+  // Função para aplicar e salvar cores e tamanhos
+  const applyColors = () => {
+    try {
+      // Salva as cores no localStorage
+      localStorage.setItem("corFundoPrincipal", corFundoPrincipal);
+      localStorage.setItem("corTextoPrincipal", corTextoPrincipal);
+      localStorage.setItem("corFundoSecundaria", corFundoSecundaria);
+      localStorage.setItem("corContraste", corContraste);
+      localStorage.setItem("corTerciaria", corTerciaria);
+
+      // Aplica as cores
+      document.documentElement.style.setProperty("--cor-fundo-principal", corFundoPrincipal);
+      document.documentElement.style.setProperty("--cor-texto-principal", corTextoPrincipal);
+      document.documentElement.style.setProperty("--cor-fundo-secundaria", corFundoSecundaria);
+      document.documentElement.style.setProperty("--cor-contraste", corContraste);
+      document.documentElement.style.setProperty("--cor-terciaria", corTerciaria);
+
+      document.documentElement.style.setProperty("--fonte-tamanho-pequeno", fonteTamanhoPequeno);
+      document.documentElement.style.setProperty("--fonte-tamanho-normal", fonteTamanhoNormal);
+      document.documentElement.style.setProperty("--fonte-tamanho-medio", fonteTamanhoMedio);
+      document.documentElement.style.setProperty("--fonte-tamanho-grande", fonteTamanhoGrande);
+
+      closeColorModal();
+    } catch (error) {
+      console.error("Erro ao aplicar cores e tamanhos:", error);
+    }
+  };
 
   useEffect(() => {
     const savedGoals = JSON.parse(localStorage.getItem("goals")) || [];
     setGoals(savedGoals);
 
-    // Carregar cores salvas
+    // Carregar cores salvas do localStorage
     const savedCorFundoPrincipal = localStorage.getItem("corFundoPrincipal") || "#FDEFE5";
     const savedCorTextoPrincipal = localStorage.getItem("corTextoPrincipal") || "#986B45";
     const savedCorFundoSecundaria = localStorage.getItem("corFundoSecundaria") || "#E2C7AA";
@@ -63,7 +90,7 @@ function App() {
     document.documentElement.style.setProperty("--cor-fundo-secundaria", savedCorFundoSecundaria);
     document.documentElement.style.setProperty("--cor-contraste", savedCorContraste);
     document.documentElement.style.setProperty("--cor-terciaria", savedCorTerciaria);
-}, []);
+  }, []);
 
 
   const handleImageUpload = (e) => {

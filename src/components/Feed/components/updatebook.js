@@ -168,22 +168,18 @@ const UpdateBook = ({ book, onUpdate, onDelete, onClose, goals = [] }) => {
                         onKeyDown={(e) => handleOptionSave(e, updatedBook.status, statusOptions, setStatusOptions, 'status', 'statusOptions')}
                         style={{ marginBottom: '10px' }}
                     />
-                    {isStatusInputVisible && (
-                        <ul className="status-list">
-                            {statusOptions.map((option, index) => (
-                                <li
-                                    key={index}
-                                    onClick={() => {
-                                        setUpdatedBook((prevData) => ({ ...prevData, status: option }));
-                                        setStatusInput(option);
-                                        setIsStatusInputVisible(false);
-                                    }}
-                                >
-                                    {option}
-                                </li>
-                            ))}
-                        </ul>
-                    )}
+                  {statusOptions.map((option, index) => (
+    <li
+        key={index}
+        onClick={() => {
+            setUpdatedBook((prevData) => ({ ...prevData, status: option }));
+            setIsStatusInputVisible(false);
+        }}
+    >
+        {option}
+    </li>
+))}
+
                        <label>Meta:
     <select value={selectedGoalId} onChange={handleGoalChange} style={{ marginBottom: '10px', width: '100%' }}>
         <option value="">Selecione uma Meta</option>

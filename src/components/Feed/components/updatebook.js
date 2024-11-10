@@ -13,6 +13,14 @@ const UpdateBook = ({ book, onUpdate, onDelete, onClose, goals = [] }) => {
     const [isPropInputVisible, setIsPropInputVisible] = useState(false);
     const [isEditoraInputVisible, setIsEditoraInputVisible] = useState(false);
 
+    const [ratingInput, setRatingInput] = useState('');
+    const [statusInput, setStatusInput] = useState('');
+    const [genreInput, setGenreInput] = useState('');
+    const [typeInput, setTypeInput] = useState('');
+    const [propInput, setPropInput] = useState('');
+    const [editoraInput, setEditoraInput] = useState('');
+
+ 
     const [ratings, setRatings] = useState([]);
     const [statusOptions, setStatusOptions] = useState([]);
     const [genreOptions, setGenreOptions] = useState([]);
@@ -21,9 +29,12 @@ const UpdateBook = ({ book, onUpdate, onDelete, onClose, goals = [] }) => {
     const [editoraOptions, setEditoraOptions] = useState([]);
 
     useEffect(() => {
+        // Log to check if goals are passed correctly
         console.log("Goals passed to UpdateBook:", goals);
+        // Set the selected goal ID if it exists in the book data
         setSelectedGoalId(book.goal || '');
     }, [book, goals]);
+
 
     useEffect(() => {
         const savedRatings = JSON.parse(localStorage.getItem('ratingsOptions')) || ['1', '2', '3', '4', '5'];
@@ -45,18 +56,13 @@ const UpdateBook = ({ book, onUpdate, onDelete, onClose, goals = [] }) => {
         setEditoraOptions(savedEditoras);
     }, []);
 
-    const handleOptionSave = (e, input, options, setOptions, key, storageKey) => {
-        if (e.key === 'Enter') {
-            const newValue = input.trim();
-            if (newValue && !options.includes(newValue)) {
-                const updatedOptions = [...options, newValue];
-                setOptions(updatedOptions);
-                setUpdatedBook((prevData) => ({ ...prevData, [key]: newValue })); 
-                localStorage.setItem(storageKey, JSON.stringify(updatedOptions));
-            }
-            e.preventDefault();
+    useEffect(() => {
+        if (book.goal) {
+            setSelectedGoalId(book.goal);
+        } else {
+            setSelectedGoalId(''); 
         }
-    };
+    }, [book]);
 
     const handleSave = () => {
         const { startDate, endDate } = updatedBook;
@@ -86,12 +92,14 @@ const UpdateBook = ({ book, onUpdate, onDelete, onClose, goals = [] }) => {
         onDelete(book.id);
         onClose();
     };
-
+ 
+    
     const handleGoalChange = (e) => {
         const selectedId = e.target.value;
         setSelectedGoalId(selectedId);
         setUpdatedBook((prev) => ({ ...prev, goal: selectedId }));
     };
+
 
     const handleImageChange = (e) => {
         const file = e.target.files[0];
@@ -108,7 +116,19 @@ const UpdateBook = ({ book, onUpdate, onDelete, onClose, goals = [] }) => {
         const { name, value } = e.target;
         setUpdatedBook((prev) => ({ ...prev, [name]: value }));
     };
-
+    const handleOptionSave = (e, input, options, setOptions, key, storageKey) => {
+        if (e.key === 'Enter') {
+            const newValue = input.trim();
+            if (newValue && !options.includes(newValue)) {
+                const updatedOptions = [...options, newValue];
+                setOptions(updatedOptions);
+                setUpdatedBook((prevData) => ({ ...prevData, [key]: newValue })); 
+                localStorage.setItem(storageKey, JSON.stringify(updatedOptions));
+            }
+            e.preventDefault();
+        }
+    };
+    
     return (
         <div className="modal">
             <div className="modal-content">
@@ -157,7 +177,8 @@ const UpdateBook = ({ book, onUpdate, onDelete, onClose, goals = [] }) => {
     </ul>
 )}
 
-<input
+                    {/* Example: Status Input */}
+                    <input
                         className="status-input"
                         type="text"
                         placeholder="Status"
@@ -168,18 +189,22 @@ const UpdateBook = ({ book, onUpdate, onDelete, onClose, goals = [] }) => {
                         onKeyDown={(e) => handleOptionSave(e, updatedBook.status, statusOptions, setStatusOptions, 'status', 'statusOptions')}
                         style={{ marginBottom: '10px' }}
                     />
-                  {statusOptions.map((option, index) => (
-    <li
-        key={index}
-        onClick={() => {
-            setUpdatedBook((prevData) => ({ ...prevData, status: option }));
-            setIsStatusInputVisible(false);
-        }}
-    >
-        {option}
-    </li>
-))}
-
+                    {isStatusInputVisible && (
+                        <ul className="status-list">
+                            {statusOptions.map((option, index) => (
+                                <li
+                                    key={index}
+                                    onClick={() => {
+                                        setUpdatedBook((prevData) => ({ ...prevData, status: option }));
+                                        setStatusInput(option);
+                                        setIsStatusInputVisible(false);
+                                    }}
+                                >
+                                    {option}
+                                </li>
+                            ))}
+                        </ul>
+                    )}
                        <label>Meta:
     <select value={selectedGoalId} onChange={handleGoalChange} style={{ marginBottom: '10px', width: '100%' }}>
         <option value="">Selecione uma Meta</option>
@@ -193,7 +218,7 @@ const UpdateBook = ({ book, onUpdate, onDelete, onClose, goals = [] }) => {
 
         </div>
         <div className="modal-right">
-         
+                    {/* Text Inputs */}
                     <label>Nome:
                         <input
                             type="text"
@@ -216,7 +241,7 @@ const UpdateBook = ({ book, onUpdate, onDelete, onClose, goals = [] }) => {
                         />
                     </label>
 
-
+                    {/* Number Inputs */}
                     <div className="input-group">
                         <label>Páginas atuais:
                             <input
@@ -238,7 +263,7 @@ const UpdateBook = ({ book, onUpdate, onDelete, onClose, goals = [] }) => {
                         </label>
                     </div>
 
-                 
+                    {/* Date Inputs */}
                     <div className="input-group">
                         <label>Data de início:
                             <input
@@ -261,7 +286,7 @@ const UpdateBook = ({ book, onUpdate, onDelete, onClose, goals = [] }) => {
                     </div>
 
                     <div className="input-group">
-
+         {/* Dropdown-like Inputs */}
          <input
                         className="editora-input"
                         type="text"

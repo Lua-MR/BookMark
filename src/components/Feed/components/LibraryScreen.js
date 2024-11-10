@@ -32,6 +32,14 @@ const LibraryScreen = ({
   });
 
   useEffect(() => {
+    if (isUpdateModalOpen && goals.length === 0) {
+        console.warn("Goals ainda não carregados ao tentar abrir o modal");
+        setIsUpdateModalOpen(false); 
+    }
+}, [goals, isUpdateModalOpen]);
+
+
+  useEffect(() => {
     console.log("Goals loaded in LibraryScreen:", goals);
 }, [goals]);
 

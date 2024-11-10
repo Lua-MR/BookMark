@@ -45,9 +45,10 @@ const LibraryScreen = ({
 
 useEffect(() => {
   const savedGoals = JSON.parse(localStorage.getItem("goals")) || [];
-  setGoals(savedGoals);
-  console.log (goals);
+  setGoals(savedGoals); // Remova esta linha
+  console.log(goals);
 }, []);
+
 
   useEffect(() => {
     try {

@@ -42,13 +42,12 @@ const LibraryScreen = ({
   useEffect(() => {
     console.log("Goals loaded in LibraryScreen:", goals);
 }, [goals]);
-
 useEffect(() => {
-  const savedGoals = JSON.parse(localStorage.getItem("goals")) || [];
-  setGoals(savedGoals); // Remova esta linha
+  if (goals.length > 0) {
+    localStorage.setItem("goals", JSON.stringify(goals));
+  }
   console.log(goals);
-}, []);
-
+}, [goals]);
 
   useEffect(() => {
     try {
@@ -354,7 +353,8 @@ useEffect(() => {
           }
           return null;
         })}
-     {isUpdateModalOpen && selectedBook && goals.length > 0 && (
+       {isUpdateModalOpen && selectedBook && goals.length > 0 && (
+        
     <UpdateBook
         book={selectedBook}
         onUpdate={handleUpdateBook}
@@ -363,7 +363,6 @@ useEffect(() => {
         goals={goals}
     />
 )}
-
       </div>
 
       <button className="add-book-button" onClick={() => setIsModalOpen(true)}>

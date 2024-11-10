@@ -339,15 +339,15 @@ const LibraryScreen = ({
           }
           return null;
         })}
-        {isUpdateModalOpen && selectedBook && (
-          <UpdateBook
-            book={selectedBook}
-            onUpdate={handleUpdateBook}
-            onDelete={handleDeleteBook}
-            onClose={closeUpdateModal}
-            goals={goals}
-          />
-        )}
+       {isUpdateModalOpen && selectedBook && goals.length > 0 && (
+    <UpdateBook
+        book={selectedBook}
+        onUpdate={handleUpdateBook}
+        onDelete={handleDeleteBook}
+        onClose={closeUpdateModal}
+        goals={goals}
+    />
+)}
       </div>
 
       <button className="add-book-button" onClick={() => setIsModalOpen(true)}>

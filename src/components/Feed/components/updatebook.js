@@ -108,7 +108,7 @@ const UpdateBook = ({ book, onUpdate, onDelete, onClose, goals = [] }) => {
         const { name, value } = e.target;
         setUpdatedBook((prev) => ({ ...prev, [name]: value }));
     };
-    
+
     return (
         <div className="modal">
             <div className="modal-content">
@@ -157,8 +157,7 @@ const UpdateBook = ({ book, onUpdate, onDelete, onClose, goals = [] }) => {
     </ul>
 )}
 
-                    {/* Example: Status Input */}
-                    <input
+<input
                         className="status-input"
                         type="text"
                         placeholder="Status"
@@ -198,7 +197,7 @@ const UpdateBook = ({ book, onUpdate, onDelete, onClose, goals = [] }) => {
 
         </div>
         <div className="modal-right">
-                    {/* Text Inputs */}
+         
                     <label>Nome:
                         <input
                             type="text"
@@ -221,7 +220,7 @@ const UpdateBook = ({ book, onUpdate, onDelete, onClose, goals = [] }) => {
                         />
                     </label>
 
-                    {/* Number Inputs */}
+
                     <div className="input-group">
                         <label>Páginas atuais:
                             <input
@@ -243,7 +242,7 @@ const UpdateBook = ({ book, onUpdate, onDelete, onClose, goals = [] }) => {
                         </label>
                     </div>
 
-                    {/* Date Inputs */}
+                 
                     <div className="input-group">
                         <label>Data de início:
                             <input
@@ -266,7 +265,7 @@ const UpdateBook = ({ book, onUpdate, onDelete, onClose, goals = [] }) => {
                     </div>
 
                     <div className="input-group">
-         {/* Dropdown-like Inputs */}
+
          <input
                         className="editora-input"
                         type="text"

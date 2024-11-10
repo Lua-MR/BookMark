@@ -32,6 +32,10 @@ const LibraryScreen = ({
   });
 
   useEffect(() => {
+    console.log("Goals loaded in LibraryScreen:", goals);
+}, [goals]);
+
+  useEffect(() => {
     try {
       const savedTabs = JSON.parse(localStorage.getItem("customTabs")) || [];
       const savedActiveTab = localStorage.getItem("activeTab") || "galeria";
@@ -117,7 +121,7 @@ const LibraryScreen = ({
       goalName: bookGoal ? bookGoal.name : "Sem meta definida",
     };
   });
-  
+
   const handleUpdateBook = (updatedBook) => {
     const bookGoal = goals.find((goal) => String(goal.id) === String(updatedBook.goal));
     const enrichedBook = {

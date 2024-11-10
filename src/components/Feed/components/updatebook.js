@@ -67,23 +67,23 @@ const UpdateBook = ({ book, onUpdate, onDelete, onClose, goals = [] }) => {
     const handleSave = () => {
         const { startDate, endDate } = updatedBook;
         const newHighlightedDays = [];
-    
+        
         const parsedStartDate = new Date(startDate + 'T00:00:00');
         const parsedEndDate = new Date(endDate + 'T23:59:59');
-    
+        
         if (parsedStartDate > parsedEndDate) {
             console.error('Start date is after end date');
             return;
         }
-    
+        
         for (let d = new Date(parsedStartDate); d <= parsedEndDate; d.setDate(d.getDate() + 1)) {
             newHighlightedDays.push(new Date(d).toLocaleDateString('en-CA'));
         }
-    
-        onUpdate({...updatedBook, goal: selectedGoalId }, newHighlightedDays);
+        
+        onUpdate({ ...updatedBook, goal: selectedGoalId }, newHighlightedDays);
         onClose();
     };
-
+    
     const handleFileInputClick = () => {
         fileInputRef.current.click();
     };

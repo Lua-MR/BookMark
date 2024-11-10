@@ -43,6 +43,12 @@ const LibraryScreen = ({
     console.log("Goals loaded in LibraryScreen:", goals);
 }, [goals]);
 
+useEffect(() => {
+  const savedGoals = JSON.parse(localStorage.getItem("goals")) || [];
+  setGoals(savedGoals);
+  console.log (goals);
+}, []);
+
   useEffect(() => {
     try {
       const savedTabs = JSON.parse(localStorage.getItem("customTabs")) || [];
@@ -348,6 +354,7 @@ const LibraryScreen = ({
           return null;
         })}
        {isUpdateModalOpen && selectedBook && goals.length > 0 && (
+        
     <UpdateBook
         book={selectedBook}
         onUpdate={handleUpdateBook}

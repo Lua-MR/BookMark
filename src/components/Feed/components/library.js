@@ -3,7 +3,7 @@ import Book from './book';
 import UpdateBook from './updatebook';
 import Calendar from './Calendar';
 
-const Library = ({ books, addNewBook, onUpdateBook, onDeleteBook }) => {
+const Library = ({ books, addNewBook, onUpdateBook, onDeleteBook, goals = [] }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [bookToUpdate, setBookToUpdate] = useState(null);
     const [newBook, setNewBook] = useState({
@@ -49,7 +49,6 @@ const Library = ({ books, addNewBook, onUpdateBook, onDeleteBook }) => {
 
     return (
         <div className="library">
-          
             <div className="book-list">
                 {books?.length > 0 ? (
                     books.map((book) => (
@@ -68,6 +67,7 @@ const Library = ({ books, addNewBook, onUpdateBook, onDeleteBook }) => {
                     onUpdate={handleUpdateBook}
                     onDelete={handleDeleteBook}
                     onClose={closeModal}
+                    goals={goals}
                 />
             )}
         </div>

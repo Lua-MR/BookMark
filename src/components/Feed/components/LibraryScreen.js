@@ -117,11 +117,17 @@ const LibraryScreen = ({
       goalName: bookGoal ? bookGoal.name : "Sem meta definida",
     };
   });
-
+  
   const handleUpdateBook = (updatedBook) => {
-    onUpdateBook(updatedBook);
+    const bookGoal = goals.find((goal) => String(goal.id) === String(updatedBook.goal));
+    const enrichedBook = {
+        ...updatedBook,
+        goalName: bookGoal ? bookGoal.name : "Sem meta definida",
+    };
+    onUpdateBook(enrichedBook);
     closeUpdateModal();
-  };
+};
+
 
   const handleBookClick = (book) => {
     setSelectedBook(book);

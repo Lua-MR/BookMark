@@ -313,6 +313,7 @@ const LibraryScreen = ({
                   <BookGallery
                     books={enrichedBooks}
                     fields={tab.fields}
+                    goals={goals}
                     onBookClick={handleBookClick}
                   />
                 ) : (

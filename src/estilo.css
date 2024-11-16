@@ -30,7 +30,6 @@
 .h3{
   color: var( --cor-fonte-escura);
 }
-
 .header {
   font-family: var(--fonte);
   display: flex;
@@ -893,6 +892,7 @@ button {
 .header, .top-menu, .footer, .sidebar, .right-panel, .app-body, .content, .modal-content, .book-list {
   font-family: var(--fonte);
   background-color: var(--cor-fundo-principal);
+  color: var( --cor-fonte-escura);
 }
 
 

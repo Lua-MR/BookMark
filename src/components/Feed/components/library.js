@@ -11,32 +11,60 @@ const Library = ({ books, addNewBook, onUpdateBook, onDeleteBook, goals = [] }) 
         genre: '',
         totalPages: 0,
         currentPage: 0,
+        goal: null, // Meta associada ao livro
     });
 
-    const handleUpdateBook = (updatedBook, newHighlightedDays = []) => {
-        // Atualiza o livro
-        onUpdateBook(updatedBook, newHighlightedDays);
+    const [highlightedDays, setHighlightedDays] = useState([]);
 
-        // Atualiza a meta associada ao livro, se aplicável
-        if (updatedBook.goal) {
-            const updatedGoals = goals.map((goal) => {
-                if (goal.id === updatedBook.goal) {
-                    return {
-                        ...goal,
-                        books: goal.books.map((book) =>
-                            book.id === updatedBook.id ? updatedBook : book
-                        ),
-                    };
-                }
-                return goal;
-            });
-
-            // Atualiza as metas no estado global (se necessário)
-            if (typeof onUpdateBook === 'function') {
-                onUpdateBook({ goals: updatedGoals });
+    const updateGoalBookCount = (goalId, isBookComplete, bookName) => {
+        // Atualizar contagem de livros na meta associada
+        const goal = goals.find((g) => String(g.id) === String(goalId));
+        if (goal) {
+            if (isBookComplete) {
+                goal.completedBooks = (goal.completedBooks || 0) + 1;
+            } else {
+                goal.incompleteBooks = (goal.incompleteBooks || 0) + 1;
             }
+
+            console.log(`Meta "${goal.name}" atualizada: Livro "${bookName}" associado.`);
+        } else {
+            console.warn(`Meta com ID "${goalId}" não encontrada.`);
+        }
+    };
+
+    const handleAddBook = () => {
+        const bookToAdd = {
+            id: Date.now(),
+            ...newBook,
+        };
+
+        // Verifica se o livro está associado a uma meta e se está completo
+        const isBookComplete =
+            parseInt(bookToAdd.currentPage, 10) === parseInt(bookToAdd.totalPages, 10);
+
+        if (bookToAdd.goal) {
+            updateGoalBookCount(bookToAdd.goal, isBookComplete, bookToAdd.name);
         }
 
+        addNewBook(bookToAdd);
+        closeModal();
+    };
+
+    const handleUpdateBook = (updatedBook, newHighlightedDays = []) => {
+        if (!Array.isArray(newHighlightedDays)) {
+            console.error("newHighlightedDays is not an array:", newHighlightedDays);
+            newHighlightedDays = [];
+        }
+
+        const isBookComplete =
+            parseInt(updatedBook.currentPage, 10) === parseInt(updatedBook.totalPages, 10);
+
+        if (updatedBook.goal) {
+            updateGoalBookCount(updatedBook.goal, isBookComplete, updatedBook.name);
+        }
+
+        onUpdateBook(updatedBook, newHighlightedDays);
+        setHighlightedDays((prev) => [...new Set([...prev, ...newHighlightedDays])]);
         closeModal();
     };
 
@@ -49,16 +77,10 @@ const Library = ({ books, addNewBook, onUpdateBook, onDeleteBook, goals = [] }) 
         onDeleteBook(bookId);
     };
 
-    const handleAddBook = () => {
-        const bookToAdd = { id: Date.now(), ...newBook };
-        addNewBook(bookToAdd);
-        closeModal();
-    };
-
     const closeModal = () => {
         setIsModalOpen(false);
         setBookToUpdate(null);
-        setNewBook({ name: '', author: '', genre: '', totalPages: 0, currentPage: 0 });
+        setNewBook({ name: '', author: '', genre: '', totalPages: 0, currentPage: 0, goal: null });
     };
 
     return (

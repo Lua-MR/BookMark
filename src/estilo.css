@@ -27,6 +27,9 @@
   color: var( --cor-fonte-escura);
 }
 
+.h3{
+  color: var( --cor-fonte-escura);
+}
 
 .header {
   font-family: var(--fonte);

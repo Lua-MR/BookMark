@@ -8,12 +8,15 @@ const initialGoalState = {
   startDate: '',
   endDate: '',
   status: 'Em andamento',
+  books: [], // Associar livros à meta
 };
 
 const GoalPage = ({ books }) => {
   const [goals, setGoals] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentGoal, setCurrentGoal] = useState(null); // Meta atual para edição
+  const [availableBooks, setAvailableBooks] = useState([]); // Livros disponíveis para adicionar à meta
+  const [selectedBook, setSelectedBook] = useState(''); // Livro selecionado para adicionar à meta
   const [statusInput, setStatusInput] = useState('');
   const [isStatusInputVisible, setIsStatusInputVisible] = useState(false);
 
@@ -23,21 +26,15 @@ const GoalPage = ({ books }) => {
   useEffect(() => {
     const savedGoals = JSON.parse(localStorage.getItem('goals')) || [];
     setGoals(savedGoals);
-  }, []);
+    setAvailableBooks(books); // Inicializa os livros disponíveis
+  }, [books]);
 
   const saveGoalsToLocalStorage = (updatedGoals) => {
     localStorage.setItem('goals', JSON.stringify(updatedGoals));
   };
 
-  const removeGoal = (goalId) => {
-    const updatedGoals = goals.filter((goal) => goal.id !== goalId);
-    setGoals(updatedGoals);
-    saveGoalsToLocalStorage(updatedGoals);
-    closeModal();
-  };
-
   const openModal = (goal = null) => {
-    setCurrentGoal(goal || initialGoalState);
+    setCurrentGoal(goal || { ...initialGoalState, id: Date.now() });
     setIsModalOpen(true);
   };
 
@@ -67,13 +64,30 @@ const GoalPage = ({ books }) => {
       return;
     }
 
-    const updatedGoals = currentGoal.id
+    const updatedGoals = goals.some((goal) => goal.id === currentGoal.id)
       ? goals.map((goal) => (goal.id === currentGoal.id ? currentGoal : goal))
-      : [...goals, { ...currentGoal, id: Date.now() }];
+      : [...goals, currentGoal];
 
     setGoals(updatedGoals);
     saveGoalsToLocalStorage(updatedGoals);
     closeModal();
+  };
+
+  const deleteGoal = () => {
+    const updatedGoals = goals.filter((goal) => goal.id !== currentGoal.id);
+    setGoals(updatedGoals);
+    saveGoalsToLocalStorage(updatedGoals);
+    closeModal();
+  };
+
+  const addBookToGoal = () => {
+    if (!selectedBook) return;
+
+    setCurrentGoal((prevGoal) => ({
+      ...prevGoal,
+      books: [...prevGoal.books, selectedBook],
+    }));
+    setSelectedBook('');
   };
 
   return (
@@ -162,6 +176,20 @@ const GoalPage = ({ books }) => {
                     onChange={handleInputChange}
                   />
 
+                  <label>Adicionar Livro</label>
+                  <select
+                    value={selectedBook}
+                    onChange={(e) => setSelectedBook(e.target.value)}
+                  >
+                    <option value="">Selecione um livro</option>
+                    {availableBooks.map((book, index) => (
+                      <option key={index} value={book.name}>
+                        {book.name}
+                      </option>
+                    ))}
+                  </select>
+                  <button onClick={addBookToGoal}>Adicionar</button>
+
                   <label>Status</label>
                   <input
                     type="text"
@@ -194,9 +222,7 @@ const GoalPage = ({ books }) => {
                       Salvar
                     </button>
                     {currentGoal?.id && (
-                      <button onClick={() => removeGoal(currentGoal.id)}>
-                        Deletar
-                      </button>
+                      <button onClick={deleteGoal}>Deletar</button>
                     )}
                   </div>
                 </div>

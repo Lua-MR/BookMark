@@ -109,7 +109,7 @@ const GoalPage = ({ books }) => {
           +
         </button>
 
-        {isModalOpen && (
+        {isModalOpen &&  (
           <div className="modal">
             <div className="modal-content">
               <button className="modal-close" onClick={closeModal}>

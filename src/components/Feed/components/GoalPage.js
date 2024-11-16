@@ -1,3 +1,17 @@
+import React, { useState, useEffect, useRef } from 'react';
+import GoalCard from './GoalCard';
+
+const initialGoalState = {
+  image: '',
+  name: '',
+  totalBooks: 0,
+  progress: 0,
+  startDate: '',
+  endDate: '',
+  status: 'Em andamento',
+  books: [], // Suporte para livros associados à meta
+};
+
 const GoalPage = ({ books = [] }) => { // Adicione um valor padrão vazio para books
   const [goals, setGoals] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);

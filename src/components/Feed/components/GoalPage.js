@@ -1,6 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
 import GoalCard from './GoalCard';
-import mockData from '../../../data/dados.json';
 
 const initialGoalState = {
   image: '',
@@ -16,12 +15,12 @@ const GoalPage = ({ books }) => {
   const [goals, setGoals] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newGoal, setNewGoal] = useState(initialGoalState);
-  const [statusInput, setStatusInput] = useState('');
+  const [editingGoal, setEditingGoal] = useState(null);
   const [isStatusInputVisible, setIsStatusInputVisible] = useState(false);
-  const [editingGoal, setEditingGoal] = useState(null); // Novo estado para meta em edição
+  const [statusInput, setStatusInput] = useState('');
+  const imageInputRef = useRef(null);
 
   const statusOptions = ['Em andamento', 'Concluído', 'Pausado'];
-  const imageInputRef = useRef(null);
 
   useEffect(() => {
     const savedGoals = JSON.parse(localStorage.getItem('goals')) || [];
@@ -32,24 +31,17 @@ const GoalPage = ({ books }) => {
     localStorage.setItem('goals', JSON.stringify(updatedGoals));
   };
 
-  const removeGoal = (goalId) => {
-    const updatedGoals = goals.filter((goal) => goal.id !== goalId);
-    setGoals(updatedGoals);
-    saveGoalsToLocalStorage(updatedGoals);
-  };
-
   const openModal = (goal = initialGoalState) => {
     setNewGoal(goal);
-    setEditingGoal(goal.id ? goal : null); // Define a meta em edição se ela tiver um ID
+    setEditingGoal(goal.id ? goal : null);
     setIsModalOpen(true);
   };
 
   const closeModal = () => {
     setIsModalOpen(false);
-    resetNewGoal();
+    setNewGoal(initialGoalState);
+    setEditingGoal(null);
   };
-
-  const resetNewGoal = () => setNewGoal(initialGoalState);
 
   const saveGoal = () => {
     if (!newGoal.name || !newGoal.totalBooks) {
@@ -71,6 +63,12 @@ const GoalPage = ({ books }) => {
     closeModal();
   };
 
+  const removeGoal = (goalId) => {
+    const updatedGoals = goals.filter((goal) => goal.id !== goalId);
+    setGoals(updatedGoals);
+    saveGoalsToLocalStorage(updatedGoals);
+  };
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setNewGoal((prevGoal) => ({ ...prevGoal, [name]: value }));
@@ -85,37 +83,18 @@ const GoalPage = ({ books }) => {
     }
   };
 
-  const updateGoalProgress = (goalId) => {
-    const updatedGoals = goals.map((goal) => {
-      if (goal.id === goalId) {
-        const booksInGoal = books.filter((book) => book.goal === goalId);
-        const progress = booksInGoal.length;
-        const progressPercentage = (progress / goal.totalBooks) * 100;
-        return {
-          ...goal,
-          progress,
-          progressPercentage,
-          status: progress >= goal.totalBooks ? 'Concluído' : 'Em andamento',
-          books: booksInGoal // Associar os livros à meta
-        };
-      }
-      return goal;
-    });
-    setGoals(updatedGoals);
-    saveGoalsToLocalStorage(updatedGoals);
-  };
-
-  useEffect(() => {
-    goals.forEach((goal) => updateGoalProgress(goal.id));
-  }, [books]);
-
   return (
     <div className="library-screen">
       <h1>Metas de Leitura</h1>
       <div className="book-list">
         {goals.length > 0 ? (
           goals.map((goal) => (
-            <GoalCard key={goal.id} goal={goal} onClick={() => openModal(goal)} onClose={() => removeGoal(goal.id)} />
+            <GoalCard
+              key={goal.id}
+              goal={goal}
+              onEdit={() => openModal(goal)}
+              onClose={() => removeGoal(goal.id)}
+            />
           ))
         ) : (
           <p>Nenhuma meta adicionada ainda</p>
@@ -123,104 +102,105 @@ const GoalPage = ({ books }) => {
         <button className="add-book-button" onClick={() => openModal()}>
           +
         </button>
+      </div>
 
-        {isModalOpen && (
-          <div className="modal">
-            <div className="modal-content">
-              <button className="modal-close" onClick={closeModal}>X</button>
+      {isModalOpen && (
+        <div className="modal">
+          <div className="modal-content">
+            <button className="modal-close" onClick={closeModal}>
+              X
+            </button>
+            <div style={{ display: 'flex', gap: '20px' }}>
+              <div className="modal-left">
+                <input
+                  type="file"
+                  accept="image/*"
+                  name="image"
+                  onChange={handleImageChange}
+                  style={{ display: 'none' }}
+                  ref={imageInputRef}
+                />
+                <button className="add-image-button" onClick={() => imageInputRef.current.click()}>
+                  🖼️ Capa
+                </button>
+                {newGoal.image && (
+                  <img src={newGoal.image} alt="Preview" style={{ width: '100px', height: '100px' }} />
+                )}
+              </div>
+              <div className="modal-right">
+                <label>Nome da Meta</label>
+                <input
+                  type="text"
+                  name="name"
+                  value={newGoal.name}
+                  onChange={handleInputChange}
+                  placeholder="Nome da meta"
+                />
 
-              <div style={{ display: 'flex', gap: '20px' }}>
-                <div className="modal-left">
+                <label>Total de Livros</label>
+                <input
+                  type="number"
+                  name="totalBooks"
+                  value={newGoal.totalBooks}
+                  onChange={handleInputChange}
+                  placeholder="Total de livros"
+                />
+
+                <label>Data de Início</label>
+                <input
+                  type="date"
+                  name="startDate"
+                  value={newGoal.startDate}
+                  onChange={handleInputChange}
+                />
+
+                <label>Data de Término</label>
+                <input
+                  type="date"
+                  name="endDate"
+                  value={newGoal.endDate}
+                  onChange={handleInputChange}
+                />
+
+                <div className="form-group">
+                  <label>Status</label>
                   <input
-                    type="file"
-                    accept="image/*"
-                    name="image"
-                    onChange={handleImageChange}
-                    style={{ display: 'none' }}
-                    ref={imageInputRef}
+                    type="text"
+                    placeholder="Status"
+                    value={statusInput}
+                    onChange={(e) => setStatusInput(e.target.value)}
+                    onFocus={() => setIsStatusInputVisible(true)}
                   />
-                  <button className="add-image-button" onClick={() => imageInputRef.current.click()}>
-                    🖼️ Capa
-                  </button>
-                  {newGoal.image && (
-                    <img src={newGoal.image} alt="Preview" style={{ width: '100px', height: '100px' }} />
+                  {isStatusInputVisible && (
+                    <ul className="status-list">
+                      {statusOptions.map((option, index) => (
+                        <li
+                          key={index}
+                          onClick={() => {
+                            setNewGoal((prevData) => ({ ...prevData, status: option }));
+                            setStatusInput(option);
+                            setIsStatusInputVisible(false);
+                          }}
+                        >
+                          {option}
+                        </li>
+                      ))}
+                    </ul>
                   )}
                 </div>
 
-                <div className="modal-right">
-                  <label>Nome da Meta</label>
-                  <input
-                    type="text"
-                    name="name"
-                    value={newGoal.name}
-                    onChange={handleInputChange}
-                    placeholder="Nome da meta"
-                  />
-
-                  <label>Total de Livros</label>
-                  <input
-                    type="number"
-                    name="totalBooks"
-                    value={newGoal.totalBooks}
-                    onChange={handleInputChange}
-                    placeholder="Total de livros"
-                  />
-
-                  <label>Data de Início</label>
-                  <input
-                    type="date"
-                    name="startDate"
-                    value={newGoal.startDate}
-                    onChange={handleInputChange}
-                  />
-
-                  <label>Data de Término</label>
-                  <input
-                    type="date"
-                    name="endDate"
-                    value={newGoal.endDate}
-                    onChange={handleInputChange}
-                  />
-
-                  <div className="form-group">
-                    <label>Status</label>
-                    <input
-                      type="text"
-                      placeholder="Status"
-                      value={statusInput}
-                      onChange={(e) => setStatusInput(e.target.value)}
-                      onFocus={() => setIsStatusInputVisible(true)}
-                    />
-                    {isStatusInputVisible && (
-                      <ul className="status-list">
-                        {statusOptions.map((option, index) => (
-                          <li
-                            key={index}
-                            onClick={() => {
-                              setNewGoal((prevData) => ({ ...prevData, status: option }));
-                              setStatusInput(option);
-                              setIsStatusInputVisible(false);
-                            }}
-                          >
-                            {option}
-                          </li>
-                        ))}
-                      </ul>
-                    )}
-                  </div>
-                  <button
-                    type="button"
-                    onClick={saveGoal}
-                    style={{ marginBottom: '10px', marginLeft: 'auto', display: 'block' }}
-                  >
-                    Salvar
-                  </button>
-                </div>
+                <button
+                  type="button"
+                  onClick={saveGoal}
+                  style={{ marginBottom: '10px', marginLeft: 'auto', display: 'block' }}
+                >
+                  Salvar
+                </button>
               </div>
             </div>
           </div>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 };

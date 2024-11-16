@@ -9,6 +9,7 @@ const initialGoalState = {
   startDate: '',
   endDate: '',
   status: 'Em andamento',
+  books: [], // Livros associados à meta
 };
 
 const GoalPage = ({ books }) => {
@@ -18,6 +19,7 @@ const GoalPage = ({ books }) => {
   const [editingGoal, setEditingGoal] = useState(null);
   const [isStatusInputVisible, setIsStatusInputVisible] = useState(false);
   const [statusInput, setStatusInput] = useState('');
+  const [selectedBook, setSelectedBook] = useState(''); // Livro selecionado para adicionar à meta
   const imageInputRef = useRef(null);
 
   const statusOptions = ['Em andamento', 'Concluído', 'Pausado'];
@@ -83,6 +85,24 @@ const GoalPage = ({ books }) => {
     }
   };
 
+  const addBookToGoal = () => {
+    if (!selectedBook) return;
+
+    const selectedBookObj = books.find((book) => book.name === selectedBook);
+    if (!selectedBookObj) return;
+
+    // Adiciona o livro à meta
+    setNewGoal((prevGoal) => ({
+      ...prevGoal,
+      books: [...prevGoal.books, selectedBookObj],
+    }));
+
+    // Atualiza o estado do livro para incluir a meta
+    selectedBookObj.goal = editingGoal ? editingGoal.id : Date.now();
+
+    setSelectedBook('');
+  };
+
   return (
     <div className="library-screen">
       <h1>Metas de Leitura</h1>
@@ -146,6 +166,28 @@ const GoalPage = ({ books }) => {
                   placeholder="Total de livros"
                 />
 
+                <label>Adicionar Livro</label>
+                <select value={selectedBook} onChange={(e) => setSelectedBook(e.target.value)}>
+                  <option value="">Selecione um livro</option>
+                  {books
+                    .filter((book) => !book.goal) // Apenas livros que não estão em uma meta
+                    .map((book) => (
+                      <option key={book.name} value={book.name}>
+                        {book.name}
+                      </option>
+                    ))}
+                </select>
+                <button onClick={addBookToGoal}>Adicionar</button>
+
+                <div>
+                  <h3>Livros na Meta</h3>
+                  <ul>
+                    {newGoal.books.map((book, index) => (
+                      <li key={index}>{book.name}</li>
+                    ))}
+                  </ul>
+                </div>
+
                 <label>Data de Início</label>
                 <input
                   type="date"
@@ -162,37 +204,35 @@ const GoalPage = ({ books }) => {
                   onChange={handleInputChange}
                 />
 
-                <div className="form-group">
-                  <label>Status</label>
-                  <input
-                    type="text"
-                    placeholder="Status"
-                    value={statusInput}
-                    onChange={(e) => setStatusInput(e.target.value)}
-                    onFocus={() => setIsStatusInputVisible(true)}
-                  />
-                  {isStatusInputVisible && (
-                    <ul className="status-list">
-                      {statusOptions.map((option, index) => (
-                        <li
-                          key={index}
-                          onClick={() => {
-                            setNewGoal((prevData) => ({ ...prevData, status: option }));
-                            setStatusInput(option);
-                            setIsStatusInputVisible(false);
-                          }}
-                        >
-                          {option}
-                        </li>
-                      ))}
-                    </ul>
-                  )}
-                </div>
+                <label>Status</label>
+                <input
+                  type="text"
+                  placeholder="Status"
+                  value={statusInput}
+                  onChange={(e) => setStatusInput(e.target.value)}
+                  onFocus={() => setIsStatusInputVisible(true)}
+                />
+                {isStatusInputVisible && (
+                  <ul className="status-list">
+                    {statusOptions.map((option, index) => (
+                      <li
+                        key={index}
+                        onClick={() => {
+                          setNewGoal((prevData) => ({ ...prevData, status: option }));
+                          setStatusInput(option);
+                          setIsStatusInputVisible(false);
+                        }}
+                      >
+                        {option}
+                      </li>
+                    ))}
+                  </ul>
+                )}
 
                 <button
                   type="button"
                   onClick={saveGoal}
-                  style={{ marginBottom: '10px', marginLeft: 'auto', display: 'block' }}
+                  style={{ marginTop: '10px', display: 'block' }}
                 >
                   Salvar
                 </button>

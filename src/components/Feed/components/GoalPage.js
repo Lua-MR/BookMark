@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import GoalCard from './GoalCard';
 
 const initialGoalState = {
@@ -9,17 +9,16 @@ const initialGoalState = {
   startDate: '',
   endDate: '',
   status: 'Em andamento',
-  books: [], // Suporte para livros associados à meta
 };
 
-const GoalPage = ({ books = [] }) => { // Adicione um valor padrão vazio para books
+const GoalPage = ({ books }) => {
   const [goals, setGoals] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newGoal, setNewGoal] = useState(initialGoalState);
   const [editingGoal, setEditingGoal] = useState(null);
   const [isStatusInputVisible, setIsStatusInputVisible] = useState(false);
   const [statusInput, setStatusInput] = useState('');
-  const [selectedBook, setSelectedBook] = useState('');
+  const imageInputRef = useRef(null);
 
   const statusOptions = ['Em andamento', 'Concluído', 'Pausado'];
 
@@ -75,21 +74,13 @@ const GoalPage = ({ books = [] }) => { // Adicione um valor padrão vazio para b
     setNewGoal((prevGoal) => ({ ...prevGoal, [name]: value }));
   };
 
-  const addBookToGoal = () => {
-    if (!selectedBook) return;
-
-    const selectedBookObj = books.find((book) => book.name === selectedBook);
-    if (!selectedBookObj) return;
-
-    // Adiciona o livro à meta
-    setNewGoal((prevGoal) => ({
-      ...prevGoal,
-      books: [...prevGoal.books, selectedBookObj],
-    }));
-
-    selectedBookObj.goal = editingGoal ? editingGoal.id : Date.now();
-
-    setSelectedBook('');
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => setNewGoal((prevGoal) => ({ ...prevGoal, image: reader.result }));
+      reader.readAsDataURL(file);
+    }
   };
 
   return (
@@ -121,25 +112,90 @@ const GoalPage = ({ books = [] }) => { // Adicione um valor padrão vazio para b
             </button>
             <div style={{ display: 'flex', gap: '20px' }}>
               <div className="modal-left">
-                {/* Imagem da meta */}
+                <input
+                  type="file"
+                  accept="image/*"
+                  name="image"
+                  onChange={handleImageChange}
+                  style={{ display: 'none' }}
+                  ref={imageInputRef}
+                />
+                <button className="add-image-button" onClick={() => imageInputRef.current.click()}>
+                  🖼️ Capa
+                </button>
+                {newGoal.image && (
+                  <img src={newGoal.image} alt="Preview" style={{ width: '100px', height: '100px' }} />
+                )}
               </div>
               <div className="modal-right">
-                <label>Adicionar Livro</label>
-                <select value={selectedBook} onChange={(e) => setSelectedBook(e.target.value)}>
-                  <option value="">Selecione um livro</option>
-                  {books.length > 0 ? ( // Verificação para evitar acessar map em undefined
-                    books
-                      .filter((book) => !book.goal) // Filtrar apenas livros sem metas atribuídas
-                      .map((book) => (
-                        <option key={book.name} value={book.name}>
-                          {book.name}
-                        </option>
-                      ))
-                  ) : (
-                    <option value="">Nenhum livro disponível</option>
+                <label>Nome da Meta</label>
+                <input
+                  type="text"
+                  name="name"
+                  value={newGoal.name}
+                  onChange={handleInputChange}
+                  placeholder="Nome da meta"
+                />
+
+                <label>Total de Livros</label>
+                <input
+                  type="number"
+                  name="totalBooks"
+                  value={newGoal.totalBooks}
+                  onChange={handleInputChange}
+                  placeholder="Total de livros"
+                />
+
+                <label>Data de Início</label>
+                <input
+                  type="date"
+                  name="startDate"
+                  value={newGoal.startDate}
+                  onChange={handleInputChange}
+                />
+
+                <label>Data de Término</label>
+                <input
+                  type="date"
+                  name="endDate"
+                  value={newGoal.endDate}
+                  onChange={handleInputChange}
+                />
+
+                <div className="form-group">
+                  <label>Status</label>
+                  <input
+                    type="text"
+                    placeholder="Status"
+                    value={statusInput}
+                    onChange={(e) => setStatusInput(e.target.value)}
+                    onFocus={() => setIsStatusInputVisible(true)}
+                  />
+                  {isStatusInputVisible && (
+                    <ul className="status-list">
+                      {statusOptions.map((option, index) => (
+                        <li
+                          key={index}
+                          onClick={() => {
+                            setNewGoal((prevData) => ({ ...prevData, status: option }));
+                            setStatusInput(option);
+                            setIsStatusInputVisible(false);
+                          }}
+                        >
+                          {option}
+                        </li>
+                      ))}
+                    </ul>
                   )}
-                </select>
-                <button onClick={addBookToGoal}>Adicionar</button>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={saveGoal}
+                  style={{ marginBottom: '10px', marginLeft: 'auto', display: 'block' }}
+                >
+                  Salvar
+                </button>
               </div>
             </div>
           </div>

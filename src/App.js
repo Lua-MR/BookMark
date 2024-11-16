@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import Calendar from "./components/Feed/components/Calendar";
-import Library from "./components/Feed/components/library";
+import goal from "./components/Feed/components/goal";
 import AddBook from "./components/Feed/components/addbook";
 import LibraryScreen from "./components/Feed/components/LibraryScreen";
 import GoalPage from "./components/Feed/components/GoalPage";
@@ -32,6 +32,8 @@ function App() {
   const [corFundoSecundaria, setCorFundoSecundaria] = useState("#E2C7AA");
   const [corContraste, setCorContraste] = useState("#A0522D");
   const [corTerciaria, setCorTerciaria] = useState("#B19A81");
+  const [corFonteClara, setCorFonteClara] = useState("#FFFFFF");
+  const [corFonteEscura, setCorFonteEscura] = useState("#333333");
 
   const [fonteTamanhoPequeno, setFonteTamanhoPequeno] = useState("12px");
   const [fonteTamanhoNormal, setFonteTamanhoNormal] = useState("16px");
@@ -47,7 +49,8 @@ function App() {
       localStorage.setItem("corFundoSecundaria", corFundoSecundaria);
       localStorage.setItem("corContraste", corContraste);
       localStorage.setItem("corTerciaria", corTerciaria);
-
+      localStorage.setItem("corFonteClara", corFonteClara);
+      localStorage.setItem("corFonteEscura", corFonteEscura);
       // Aplica as cores
       document.documentElement.style.setProperty("--cor-fundo-principal", corFundoPrincipal);
       document.documentElement.style.setProperty("--cor-texto-principal", corTextoPrincipal);
@@ -76,12 +79,16 @@ function App() {
     const savedCorFundoSecundaria = localStorage.getItem("corFundoSecundaria") || "#E2C7AA";
     const savedCorContraste = localStorage.getItem("corContraste") || "#A0522D";
     const savedCorTerciaria = localStorage.getItem("corTerciaria") || "#B19A81";
+    const [corFonteClara, setCorFonteClara] = useState("#FFFFFF");
+    const [corFonteEscura, setCorFonteEscura] = useState("#333333");
 
     setCorFundoPrincipal(savedCorFundoPrincipal);
     setCorTextoPrincipal(savedCorTextoPrincipal);
     setCorFundoSecundaria(savedCorFundoSecundaria);
     setCorContraste(savedCorContraste);
     setCorTerciaria(savedCorTerciaria);
+    setCorFonteClara(savedCorFonteClara);
+    setCorFonteEscura(savedCorFonteEscura);
 
     // Aplicar as cores na inicialização
     document.documentElement.style.setProperty("--cor-fundo-principal", savedCorFundoPrincipal);
@@ -89,6 +96,9 @@ function App() {
     document.documentElement.style.setProperty("--cor-fundo-secundaria", savedCorFundoSecundaria);
     document.documentElement.style.setProperty("--cor-contraste", savedCorContraste);
     document.documentElement.style.setProperty("--cor-terciaria", savedCorTerciaria);
+    document.documentElement.style.setProperty("--cor-fonte-clara", savedCorFonteClara);
+    document.documentElement.style.setProperty("--cor-fonte-escura", savedCorFonteEscura);
+  
   }, []);
 
 

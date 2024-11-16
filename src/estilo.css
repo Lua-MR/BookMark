@@ -122,7 +122,7 @@
   width: 250px; 
   background-color: var(--cor-fundo-principal); 
   padding: 10px; 
-  color:   var(--cor-texto-claro);
+  color:   var(--cor-fonte-clara);
 }
 
 .profile-container {
@@ -167,12 +167,12 @@
 
 .sidebar button {
   background-color:  var(--cor-fundo-secundaria); 
-  color:   var(--cor-texto-claro);
+  color:   var(--cor-fonte-clara);
 }
 
 .sidebar-p button {
   background-color:  var(--cor-terciaria); 
-  color:   var(--cor-texto-claro);
+  color:   var(--cor-fonte-clara);
 }
 
 .sidebar button:hover {
@@ -296,7 +296,7 @@ textarea {
 button {
   width: 35%;
   background-color:  var(--cor-terciaria); 
-  color:   var(--cor-texto-claro); 
+  color:   var(--cor-fonte-clara); 
   border: none; 
   border-radius: 5px; 
   padding: 10px 20px; 
@@ -339,7 +339,7 @@ button {
 
 .quote-list li:hover,.rating-list li:hover, .status-list li:hover, .genre-list li:hover, .type-list li:hover, .prop-list li:hover, .editora-list li:hover {
   background-color:  var(--cor-terciaria); 
-  color:   var(--cor-texto-claro); 
+  color:   var(--cor-fonte-clara); 
 }
 
 .modal-close, .modal-close-list {
@@ -582,7 +582,7 @@ button {
   
   .footer {
     background-color:  var(--cor-terciaria); 
-    color:   var(--cor-texto-claro);
+    color:   var(--cor-fonte-clara);
     text-align: center;
     padding: 10px 0;
     width: 100%;
@@ -803,7 +803,7 @@ button {
     align-items: center;
     justify-content: center;
     background-color: var(--cor-texto-principal); 
-    color:   var(--cor-texto-claro);
+    color:   var(--cor-fonte-clara);
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
     padding: 10px 0;

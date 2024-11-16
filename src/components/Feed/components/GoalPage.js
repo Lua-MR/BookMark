@@ -128,7 +128,7 @@ const GoalPage = ({ books }) => {
                 )}
               </div>
               <div className="modal-right">
-                <label>Nome da Meta</label>
+                <label>Nome da Meta*</label>
                 <input
                   type="text"
                   name="name"
@@ -137,7 +137,7 @@ const GoalPage = ({ books }) => {
                   placeholder="Nome da meta"
                 />
 
-                <label>Total de Livros</label>
+                <label>Total de Livros*</label>
                 <input
                   type="number"
                   name="totalBooks"

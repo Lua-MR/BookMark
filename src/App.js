@@ -1,13 +1,11 @@
 import React, { useState, useRef, useEffect } from "react";
 import Calendar from "./components/Feed/components/Calendar";
-import goal from "./components/Feed/components/GoalCard";
-import AddBook from "./components/Feed/components/addbook";
 import LibraryScreen from "./components/Feed/components/LibraryScreen";
+import AddBook from "./components/Feed/components/addbook";
 import GoalPage from "./components/Feed/components/GoalPage";
 import Genre from "./components/Feed/components/genre";
-import UpdateBook from "./components/Feed/components/updatebook";
 import "./estilo.css";
-import mockData from './data/dados.json';
+import mockData from "./data/dados.json";
 
 function App() {
   const [profileImage, setProfileImage] = useState(null);
@@ -34,7 +32,7 @@ function App() {
   const [corTerciaria, setCorTerciaria] = useState("#B19A81");
   const [corFonteClara, setCorFonteClara] = useState("#FFFFFF");
   const [corFonteEscura, setCorFonteEscura] = useState("#333333");
-  
+
   const [fonteTamanhoPequeno, setFonteTamanhoPequeno] = useState("12px");
   const [fonteTamanhoNormal, setFonteTamanhoNormal] = useState("16px");
   const [fonteTamanhoMedio, setFonteTamanhoMedio] = useState("20px");
@@ -93,7 +91,6 @@ function App() {
     document.documentElement.style.setProperty("--cor-fonte-clara", savedCorFonteClara);
     document.documentElement.style.setProperty("--cor-fonte-escura", savedCorFonteEscura);
   }, []);
-}
 
   const handleImageUpload = (e) => {
     const file = e.target.files[0];

@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import Book from './book';
 import UpdateBook from './updatebook';
-import Calendar from './Calendar';
 
 const Library = ({ books, addNewBook, onUpdateBook, onDeleteBook, goals = [] }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -13,16 +12,31 @@ const Library = ({ books, addNewBook, onUpdateBook, onDeleteBook, goals = [] }) 
         totalPages: 0,
         currentPage: 0,
     });
-    const [highlightedDays, setHighlightedDays] = useState([]);
 
     const handleUpdateBook = (updatedBook, newHighlightedDays = []) => {
-        if (!Array.isArray(newHighlightedDays)) {
-            console.error("newHighlightedDays is not an array:", newHighlightedDays);
-            newHighlightedDays = [];
+        // Atualiza o livro
+        onUpdateBook(updatedBook, newHighlightedDays);
+
+        // Atualiza a meta associada ao livro, se aplicável
+        if (updatedBook.goal) {
+            const updatedGoals = goals.map((goal) => {
+                if (goal.id === updatedBook.goal) {
+                    return {
+                        ...goal,
+                        books: goal.books.map((book) =>
+                            book.id === updatedBook.id ? updatedBook : book
+                        ),
+                    };
+                }
+                return goal;
+            });
+
+            // Atualiza as metas no estado global (se necessário)
+            if (typeof onUpdateBook === 'function') {
+                onUpdateBook({ goals: updatedGoals });
+            }
         }
-    
-        onUpdateBook(updatedBook, newHighlightedDays); 
-        setHighlightedDays((prev) => [...new Set([...prev, ...newHighlightedDays])]);
+
         closeModal();
     };
 

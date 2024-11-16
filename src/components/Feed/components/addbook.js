@@ -204,7 +204,7 @@ const AddBook = ({ addBook, goals = [], updateGoalBookCount }) => {
             goal: selectedGoalId,
             goalName: goalObject ? goalObject.name : "Sem meta definida", 
         };
-    
+        
         const { startDate, endDate } = bookData;
         const newHighlightedDays = [];
     
@@ -212,7 +212,7 @@ const AddBook = ({ addBook, goals = [], updateGoalBookCount }) => {
         const parsedEndDate = new Date(endDate + "T23:59:59");
     
         if (parsedStartDate > parsedEndDate) {
-            alert("Erro: A data de início não pode ser posterior à data de término.");
+            console.error("Data de Início é posterior à Data de Término");
             return;
         }
     
@@ -228,7 +228,7 @@ const AddBook = ({ addBook, goals = [], updateGoalBookCount }) => {
         }
     
         setHighlightedDays((prevDays) => [...prevDays, ...newHighlightedDays]);
-    
+
         resetForm();
     };
     
@@ -347,7 +347,7 @@ const AddBook = ({ addBook, goals = [], updateGoalBookCount }) => {
                 <div className="modal-right">
                     <input
                         type="text"
-                        placeholder="Nome do Livro"
+                        placeholder="Nome do Livro*"
                         name="name"
                         value={bookData.name}
                         onChange={handleChange}

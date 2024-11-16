@@ -1450,7 +1450,7 @@ button {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    background-color: var(--cor-escura);
+    background-color: var(--cor-fundo-secundaria);
     color:  var(--cor-fonte-clara);
     border: none;
     border-radius: 5px;
@@ -1684,7 +1684,7 @@ button {
 }
 
 .nav-button:hover {
-    background-color: #7a4c35;
+    background-color: var(--cor-fundo-secundaria);
 }
 
 .regular-day {

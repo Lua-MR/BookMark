@@ -1,26 +1,11 @@
-import React, { useState, useRef, useEffect } from 'react';
-import GoalCard from './GoalCard';
-
-const initialGoalState = {
-  image: '',
-  name: '',
-  totalBooks: 0,
-  progress: 0,
-  startDate: '',
-  endDate: '',
-  status: 'Em andamento',
-  books: [], // Livros associados à meta
-};
-
-const GoalPage = ({ books }) => {
+const GoalPage = ({ books = [] }) => { // Adicione um valor padrão vazio para books
   const [goals, setGoals] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newGoal, setNewGoal] = useState(initialGoalState);
   const [editingGoal, setEditingGoal] = useState(null);
   const [isStatusInputVisible, setIsStatusInputVisible] = useState(false);
   const [statusInput, setStatusInput] = useState('');
-  const [selectedBook, setSelectedBook] = useState(''); // Livro selecionado para adicionar à meta
-  const imageInputRef = useRef(null);
+  const [selectedBook, setSelectedBook] = useState('');
 
   const statusOptions = ['Em andamento', 'Concluído', 'Pausado'];
 
@@ -76,15 +61,6 @@ const GoalPage = ({ books }) => {
     setNewGoal((prevGoal) => ({ ...prevGoal, [name]: value }));
   };
 
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => setNewGoal((prevGoal) => ({ ...prevGoal, image: reader.result }));
-      reader.readAsDataURL(file);
-    }
-  };
-
   const addBookToGoal = () => {
     if (!selectedBook) return;
 
@@ -97,7 +73,6 @@ const GoalPage = ({ books }) => {
       books: [...prevGoal.books, selectedBookObj],
     }));
 
-    // Atualiza o estado do livro para incluir a meta
     selectedBookObj.goal = editingGoal ? editingGoal.id : Date.now();
 
     setSelectedBook('');
@@ -132,110 +107,25 @@ const GoalPage = ({ books }) => {
             </button>
             <div style={{ display: 'flex', gap: '20px' }}>
               <div className="modal-left">
-                <input
-                  type="file"
-                  accept="image/*"
-                  name="image"
-                  onChange={handleImageChange}
-                  style={{ display: 'none' }}
-                  ref={imageInputRef}
-                />
-                <button className="add-image-button" onClick={() => imageInputRef.current.click()}>
-                  🖼️ Capa
-                </button>
-                {newGoal.image && (
-                  <img src={newGoal.image} alt="Preview" style={{ width: '100px', height: '100px' }} />
-                )}
+                {/* Imagem da meta */}
               </div>
               <div className="modal-right">
-                <label>Nome da Meta</label>
-                <input
-                  type="text"
-                  name="name"
-                  value={newGoal.name}
-                  onChange={handleInputChange}
-                  placeholder="Nome da meta"
-                />
-
-                <label>Total de Livros</label>
-                <input
-                  type="number"
-                  name="totalBooks"
-                  value={newGoal.totalBooks}
-                  onChange={handleInputChange}
-                  placeholder="Total de livros"
-                />
-
                 <label>Adicionar Livro</label>
                 <select value={selectedBook} onChange={(e) => setSelectedBook(e.target.value)}>
                   <option value="">Selecione um livro</option>
-                  {books
-                    .filter((book) => !book.goal) // Apenas livros que não estão em uma meta
-                    .map((book) => (
-                      <option key={book.name} value={book.name}>
-                        {book.name}
-                      </option>
-                    ))}
+                  {books.length > 0 ? ( // Verificação para evitar acessar map em undefined
+                    books
+                      .filter((book) => !book.goal) // Filtrar apenas livros sem metas atribuídas
+                      .map((book) => (
+                        <option key={book.name} value={book.name}>
+                          {book.name}
+                        </option>
+                      ))
+                  ) : (
+                    <option value="">Nenhum livro disponível</option>
+                  )}
                 </select>
                 <button onClick={addBookToGoal}>Adicionar</button>
-
-                <div>
-                  <h3>Livros na Meta</h3>
-                  <ul>
-                    {newGoal.books.map((book, index) => (
-                      <li key={index}>{book.name}</li>
-                    ))}
-                  </ul>
-                </div>
-
-                <label>Data de Início</label>
-                <input
-                  type="date"
-                  name="startDate"
-                  value={newGoal.startDate}
-                  onChange={handleInputChange}
-                />
-
-                <label>Data de Término</label>
-                <input
-                  type="date"
-                  name="endDate"
-                  value={newGoal.endDate}
-                  onChange={handleInputChange}
-                />
-
-                <label>Status</label>
-                <input
-                  type="text"
-                  placeholder="Status"
-                  value={statusInput}
-                  onChange={(e) => setStatusInput(e.target.value)}
-                  onFocus={() => setIsStatusInputVisible(true)}
-                />
-                {isStatusInputVisible && (
-                  <ul className="status-list">
-                    {statusOptions.map((option, index) => (
-                      <li
-                        key={index}
-                        onClick={() => {
-                          setNewGoal((prevData) => ({ ...prevData, status: option }));
-                          setStatusInput(option);
-                          setIsStatusInputVisible(false);
-                        }}
-                      >
-                        {option}
-                      </li>
-                    ))}
-                  </ul>
-                )}
-
-                <button
-                  type="button"
-                  onClick={saveGoal}
-                  style={{ marginTop: '10px', display: 'block' }}
-                >
-                  Salvar
-                </button>
               </div>
             </div>
           </div>

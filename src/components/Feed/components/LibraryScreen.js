@@ -33,21 +33,20 @@ const LibraryScreen = ({
 
   useEffect(() => {
     if (isUpdateModalOpen && goals.length === 0) {
-        console.warn("Goals ainda não carregados ao tentar abrir o modal");
-        setIsUpdateModalOpen(false); 
+      console.warn("Goals ainda não carregados ao tentar abrir o modal");
+      setIsUpdateModalOpen(false); 
     }
-}, [goals, isUpdateModalOpen]);
-
+  }, [goals, isUpdateModalOpen]);
 
   useEffect(() => {
     console.log("Goals loaded in LibraryScreen:", goals);
-}, [goals]);
-useEffect(() => {
-  if (goals.length > 0) {
-    localStorage.setItem("goals", JSON.stringify(goals));
-  }
-  console.log(goals);
-}, [goals]);
+  }, [goals]);
+
+  useEffect(() => {
+    if (goals.length > 0) {
+      localStorage.setItem("goals", JSON.stringify(goals));
+    }
+  }, [goals]);
 
   useEffect(() => {
     try {
@@ -136,13 +135,30 @@ useEffect(() => {
     };
   });
 
-  const handleUpdateBook = (updatedBook) => {
+ const handleUpdateBook = (updatedBook) => {
     const bookGoal = goals.find((goal) => String(goal.id) === String(updatedBook.goal));
-    const enrichedBook = {
-        ...updatedBook,
-        goalName: bookGoal ? bookGoal.name : "Sem meta definida",
-    };
-    onUpdateBook(enrichedBook);
+
+    // Atualiza os livros associados à meta
+    if (bookGoal) {
+        const updatedGoals = goals.map((goal) => {
+            if (String(goal.id) === String(updatedBook.goal)) {
+                // Atualiza os livros na meta
+                return {
+                    ...goal,
+                    books: [...goal.books.filter((book) => book.id !== updatedBook.id), updatedBook],
+                };
+            }
+            return goal;
+        });
+
+        // Atualiza a meta associada
+        setGoals(updatedGoals); // Se estiver gerenciando metas localmente
+        localStorage.setItem('goals', JSON.stringify(updatedGoals)); // Persistência opcional
+    }
+
+    // Atualiza o livro no estado global ou local
+    onUpdateBook(updatedBook);
+
     closeUpdateModal();
 };
 
@@ -253,6 +269,7 @@ useEffect(() => {
     "dataTermino",
   ];
 
+
   return (
     <div className="library-screen">
       <div className="tabs">
@@ -353,6 +370,7 @@ useEffect(() => {
           }
           return null;
         })}
+        
        {isUpdateModalOpen && selectedBook && goals.length > 0 && (
         
     <UpdateBook

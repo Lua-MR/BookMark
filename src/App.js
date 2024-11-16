@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import Calendar from "./components/Feed/components/Calendar";
-import goal from "./components/Feed/components/goal";
+import goal from "./components/Feed/components/GoalCard";
 import AddBook from "./components/Feed/components/addbook";
 import LibraryScreen from "./components/Feed/components/LibraryScreen";
 import GoalPage from "./components/Feed/components/GoalPage";
@@ -34,7 +34,7 @@ function App() {
   const [corTerciaria, setCorTerciaria] = useState("#B19A81");
   const [corFonteClara, setCorFonteClara] = useState("#FFFFFF");
   const [corFonteEscura, setCorFonteEscura] = useState("#333333");
-
+  
   const [fonteTamanhoPequeno, setFonteTamanhoPequeno] = useState("12px");
   const [fonteTamanhoNormal, setFonteTamanhoNormal] = useState("16px");
   const [fonteTamanhoMedio, setFonteTamanhoMedio] = useState("20px");
@@ -43,7 +43,6 @@ function App() {
   // Função para aplicar e salvar cores e tamanhos
   const applyColors = () => {
     try {
-      // Salva as cores no localStorage
       localStorage.setItem("corFundoPrincipal", corFundoPrincipal);
       localStorage.setItem("corTextoPrincipal", corTextoPrincipal);
       localStorage.setItem("corFundoSecundaria", corFundoSecundaria);
@@ -51,17 +50,14 @@ function App() {
       localStorage.setItem("corTerciaria", corTerciaria);
       localStorage.setItem("corFonteClara", corFonteClara);
       localStorage.setItem("corFonteEscura", corFonteEscura);
-      // Aplica as cores
+
       document.documentElement.style.setProperty("--cor-fundo-principal", corFundoPrincipal);
       document.documentElement.style.setProperty("--cor-texto-principal", corTextoPrincipal);
       document.documentElement.style.setProperty("--cor-fundo-secundaria", corFundoSecundaria);
       document.documentElement.style.setProperty("--cor-contraste", corContraste);
       document.documentElement.style.setProperty("--cor-terciaria", corTerciaria);
-
-      document.documentElement.style.setProperty("--fonte-tamanho-pequeno", fonteTamanhoPequeno);
-      document.documentElement.style.setProperty("--fonte-tamanho-normal", fonteTamanhoNormal);
-      document.documentElement.style.setProperty("--fonte-tamanho-medio", fonteTamanhoMedio);
-      document.documentElement.style.setProperty("--fonte-tamanho-grande", fonteTamanhoGrande);
+      document.documentElement.style.setProperty("--cor-fonte-clara", corFonteClara);
+      document.documentElement.style.setProperty("--cor-fonte-escura", corFonteEscura);
 
       closeColorModal();
     } catch (error) {
@@ -73,14 +69,13 @@ function App() {
     const savedGoals = JSON.parse(localStorage.getItem("goals")) || [];
     setGoals(savedGoals);
 
-    // Carregar cores salvas do localStorage
     const savedCorFundoPrincipal = localStorage.getItem("corFundoPrincipal") || "#FDEFE5";
     const savedCorTextoPrincipal = localStorage.getItem("corTextoPrincipal") || "#986B45";
     const savedCorFundoSecundaria = localStorage.getItem("corFundoSecundaria") || "#E2C7AA";
     const savedCorContraste = localStorage.getItem("corContraste") || "#A0522D";
     const savedCorTerciaria = localStorage.getItem("corTerciaria") || "#B19A81";
-    const [corFonteClara, setCorFonteClara] = useState("#FFFFFF");
-    const [corFonteEscura, setCorFonteEscura] = useState("#333333");
+    const savedCorFonteClara = localStorage.getItem("corFonteClara") || "#FFFFFF";
+    const savedCorFonteEscura = localStorage.getItem("corFonteEscura") || "#333333";
 
     setCorFundoPrincipal(savedCorFundoPrincipal);
     setCorTextoPrincipal(savedCorTextoPrincipal);
@@ -90,7 +85,6 @@ function App() {
     setCorFonteClara(savedCorFonteClara);
     setCorFonteEscura(savedCorFonteEscura);
 
-    // Aplicar as cores na inicialização
     document.documentElement.style.setProperty("--cor-fundo-principal", savedCorFundoPrincipal);
     document.documentElement.style.setProperty("--cor-texto-principal", savedCorTextoPrincipal);
     document.documentElement.style.setProperty("--cor-fundo-secundaria", savedCorFundoSecundaria);
@@ -98,9 +92,8 @@ function App() {
     document.documentElement.style.setProperty("--cor-terciaria", savedCorTerciaria);
     document.documentElement.style.setProperty("--cor-fonte-clara", savedCorFonteClara);
     document.documentElement.style.setProperty("--cor-fonte-escura", savedCorFonteEscura);
-  
   }, []);
-
+}
 
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
@@ -447,6 +440,28 @@ function App() {
                   onChange={(e) => setFonteTamanhoGrande(`${e.target.value}px`)}
                 />
               </div>
+              <div>
+          <label htmlFor="cor-fonte-clara">Cor da Fonte Clara</label>
+          <input
+            className="color-preview"
+            style={{ backgroundColor: corFonteClara }}
+            type="color"
+            id="cor-fonte-clara"
+            value={corFonteClara}
+            onChange={(e) => setCorFonteClara(e.target.value)}
+          />
+        </div>
+        <div>
+          <label htmlFor="cor-fonte-escura">Cor da Fonte Escura</label>
+          <input
+            className="color-preview"
+            style={{ backgroundColor: corFonteEscura }}
+            type="color"
+            id="cor-fonte-escura"
+            value={corFonteEscura}
+            onChange={(e) => setCorFonteEscura(e.target.value)}
+          />
+        </div>
             </div>
 
             <div className="modal-right">

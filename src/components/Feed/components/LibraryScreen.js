@@ -135,33 +135,15 @@ const LibraryScreen = ({
     };
   });
 
- const handleUpdateBook = (updatedBook) => {
+  const handleUpdateBook = (updatedBook) => {
     const bookGoal = goals.find((goal) => String(goal.id) === String(updatedBook.goal));
-
-    // Atualiza os livros associados à meta
-    if (bookGoal) {
-        const updatedGoals = goals.map((goal) => {
-            if (String(goal.id) === String(updatedBook.goal)) {
-                // Atualiza os livros na meta
-                return {
-                    ...goal,
-                    books: [...goal.books.filter((book) => book.id !== updatedBook.id), updatedBook],
-                };
-            }
-            return goal;
-        });
-
-        // Atualiza a meta associada
-        setGoals(updatedGoals); // Se estiver gerenciando metas localmente
-        localStorage.setItem('goals', JSON.stringify(updatedGoals)); // Persistência opcional
-    }
-
-    // Atualiza o livro no estado global ou local
-    onUpdateBook(updatedBook);
-
+    const enrichedBook = {
+      ...updatedBook,
+      goalName: bookGoal ? bookGoal.name : "Sem meta definida",
+    };
+    onUpdateBook(enrichedBook);
     closeUpdateModal();
-};
-
+  };
 
   const handleBookClick = (book) => {
     setSelectedBook(book);

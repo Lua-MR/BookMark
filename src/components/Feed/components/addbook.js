@@ -385,6 +385,7 @@ const AddBook = ({ addBook, goals = [], updateGoalBookCount }) => {
                 
                   
                     <div className="input-group">
+                        <h3>Data Inicio</h3>
                     <input
     placeholder="Data de Início"
     className="textbox-n"
@@ -395,7 +396,9 @@ const AddBook = ({ addBook, goals = [], updateGoalBookCount }) => {
     required
     style={{ marginBottom: '10px', width: '39%' }}
 />
+<h3>Data Termino</h3>
 <input
+
     placeholder="Data de Término"
     className="textbox-n"
     type="date" 

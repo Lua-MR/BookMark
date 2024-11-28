@@ -1928,15 +1928,12 @@ button {
   display: flex;
 }
 
-
-/* Ajuste no modal para telas menores */
 .modal-content {
-  width: 90%;
-  max-width: 500px;
-  height: auto;
-  max-height: 80%;
+    width: 95%;
+    max-width: 600px;
+    height: auto;
+    max-height: 90%;
 }
-
 
 @media (min-width: 769px) and (max-width: 1024px) {
   .calendar {

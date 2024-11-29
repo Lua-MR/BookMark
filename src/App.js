@@ -144,7 +144,7 @@ function App() {
   //   setBooks(savedBooks);
   // }, []);
 
- const updateBook = (updatedBook) => {
+const updateBook = (updatedBook) => {
   setBooks((prevBooks) => {
     const updatedBooks = prevBooks.map((book) =>
       book.id === updatedBook.id ? updatedBook : book
@@ -153,9 +153,14 @@ function App() {
     return updatedBooks;
   });
 
-  // Atualiza os dias destacados no calendário
+  // Atualiza os dias destacados no calendário, se aplicável
   if (updatedBook.startDate && updatedBook.endDate) {
     updateHighlightedDays(updatedBook.startDate, updatedBook.endDate);
+  }
+
+  // Atualiza o progresso da meta associada, se aplicável
+  if (updatedBook.goal) {
+    updateGoalProgress(updatedBook.goal);
   }
 };
 
@@ -169,25 +174,27 @@ function App() {
     });
   };
 
-  const updateGoalProgress = (goalId) => {
-    const updatedGoals = goals.map((goal) => {
-      if (String(goal.id) === String(goalId)) {
-        const booksInGoal = books.filter((book) => book.goal === goalId);
-        const progress = booksInGoal.length;
-        const progressPercentage = (progress / goal.totalBooks) * 100;
-        return {
-          ...goal,
-          progress,
-          progressPercentage,
-          status: progress >= goal.totalBooks ? "Concluído" : "Em andamento",
-        };
-      }
-      return goal;
-    });
+const updateGoalProgress = (goalId) => {
+  const updatedGoals = goals.map((goal) => {
+    if (String(goal.id) === String(goalId)) {
+      const booksInGoal = books.filter((book) => String(book.goal) === String(goalId));
+      const progress = booksInGoal.length;
+      const progressPercentage = (progress / goal.totalBooks) * 100;
 
-    setGoals(updatedGoals);
-    localStorage.setItem("goals", JSON.stringify(updatedGoals));
-  };
+      return {
+        ...goal,
+        progress,
+        progressPercentage,
+        status: progress >= goal.totalBooks ? "Concluído" : "Em andamento",
+      };
+    }
+    return goal;
+  });
+
+  setGoals(updatedGoals);
+  localStorage.setItem("goals", JSON.stringify(updatedGoals));
+};
+
 
   useEffect(() => {
     goals.forEach((goal) => updateGoalProgress(goal.id));
@@ -200,6 +207,24 @@ function App() {
     setGoals(updatedGoals);
     localStorage.setItem("goals", JSON.stringify(updatedGoals));
   };
+
+  const saveGoal = (newGoal) => {
+  if (!newGoal.name || !newGoal.totalBooks) {
+    alert("Por favor, preencha todos os campos obrigatórios.");
+    return;
+  }
+
+  setGoals((prevGoals) => {
+    const updatedGoals = newGoal.id
+      ? prevGoals.map((goal) =>
+          goal.id === newGoal.id ? { ...goal, ...newGoal } : goal
+        )
+      : [...prevGoals, { ...newGoal, id: Date.now(), progress: 0, progressPercentage: 0 }];
+
+    localStorage.setItem("goals", JSON.stringify(updatedGoals));
+    return updatedGoals;
+  });
+};
 
   const updateGoalBookCount = (goalId, isBookComplete, bookName) => {
     setGoals((prevGoals) =>

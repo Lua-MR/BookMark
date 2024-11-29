@@ -144,15 +144,21 @@ function App() {
   //   setBooks(savedBooks);
   // }, []);
 
-  const updateBook = (updatedBook) => {
-    setBooks((prevBooks) => {
-      const updatedBooks = prevBooks.map((book) =>
-        book.id === updatedBook.id ? updatedBook : book
-      );
-      localStorage.setItem("books", JSON.stringify(updatedBooks));
-      return updatedBooks;
-    });
-  };
+ const updateBook = (updatedBook) => {
+  setBooks((prevBooks) => {
+    const updatedBooks = prevBooks.map((book) =>
+      book.id === updatedBook.id ? updatedBook : book
+    );
+    localStorage.setItem("books", JSON.stringify(updatedBooks));
+    return updatedBooks;
+  });
+
+  // Atualiza os dias destacados no calendário
+  if (updatedBook.startDate && updatedBook.endDate) {
+    updateHighlightedDays(updatedBook.startDate, updatedBook.endDate);
+  }
+};
+
 
   const deleteBook = (bookId) => {
     console.log(`Deleting book with ID: ${bookId}`); // Add this line

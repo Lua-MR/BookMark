@@ -39,30 +39,64 @@ function App() {
   const [fonteTamanhoMedio, setFonteTamanhoMedio] = useState("20px");
   const [fonteTamanhoGrande, setFonteTamanhoGrande] = useState("24px");
 
-  // Função para aplicar e salvar cores e tamanhos
-  const applyColors = () => {
-    try {
-      localStorage.setItem("corFundoPrincipal", corFundoPrincipal);
-      localStorage.setItem("corTextoPrincipal", corTextoPrincipal);
-      localStorage.setItem("corFundoSecundaria", corFundoSecundaria);
-      localStorage.setItem("corContraste", corContraste);
-      localStorage.setItem("corTerciaria", corTerciaria);
-      localStorage.setItem("corFonteClara", corFonteClara);
-      localStorage.setItem("corFonteEscura", corFonteEscura);
+const applyColors = () => {
+  try {
+    // Salvar cores no localStorage
+    localStorage.setItem("corFundoPrincipal", corFundoPrincipal);
+    localStorage.setItem("corTextoPrincipal", corTextoPrincipal);
+    localStorage.setItem("corFundoSecundaria", corFundoSecundaria);
+    localStorage.setItem("corContraste", corContraste);
+    localStorage.setItem("corTerciaria", corTerciaria);
+    localStorage.setItem("corFonteClara", corFonteClara);
+    localStorage.setItem("corFonteEscura", corFonteEscura);
 
-      document.documentElement.style.setProperty("--cor-fundo-principal", corFundoPrincipal);
-      document.documentElement.style.setProperty("--cor-texto-principal", corTextoPrincipal);
-      document.documentElement.style.setProperty("--cor-fundo-secundaria", corFundoSecundaria);
-      document.documentElement.style.setProperty("--cor-contraste", corContraste);
-      document.documentElement.style.setProperty("--cor-terciaria", corTerciaria);
-      document.documentElement.style.setProperty("--cor-fonte-clara", corFonteClara);
-      document.documentElement.style.setProperty("--cor-fonte-escura", corFonteEscura);
+    // Salvar tamanhos das fontes no localStorage
+    localStorage.setItem("fonteTamanhoPequeno", fonteTamanhoPequeno);
+    localStorage.setItem("fonteTamanhoNormal", fonteTamanhoNormal);
+    localStorage.setItem("fonteTamanhoMedio", fonteTamanhoMedio);
+    localStorage.setItem("fonteTamanhoGrande", fonteTamanhoGrande);
 
-      closeColorModal();
-    } catch (error) {
-      console.error("Erro ao aplicar cores e tamanhos:", error);
-    }
-  };
+    // Aplicar cores como variáveis CSS globais
+    document.documentElement.style.setProperty("--cor-fundo-principal", corFundoPrincipal);
+    document.documentElement.style.setProperty("--cor-texto-principal", corTextoPrincipal);
+    document.documentElement.style.setProperty("--cor-fundo-secundaria", corFundoSecundaria);
+    document.documentElement.style.setProperty("--cor-contraste", corContraste);
+    document.documentElement.style.setProperty("--cor-terciaria", corTerciaria);
+    document.documentElement.style.setProperty("--cor-fonte-clara", corFonteClara);
+    document.documentElement.style.setProperty("--cor-fonte-escura", corFonteEscura);
+
+    // Aplicar tamanhos das fontes como variáveis CSS globais
+    document.documentElement.style.setProperty("--fonte-tamanho-pequeno", fonteTamanhoPequeno);
+    document.documentElement.style.setProperty("--fonte-tamanho-normal", fonteTamanhoNormal);
+    document.documentElement.style.setProperty("--fonte-tamanho-medio", fonteTamanhoMedio);
+    document.documentElement.style.setProperty("--fonte-tamanho-grande", fonteTamanhoGrande);
+
+    closeColorModal();
+  } catch (error) {
+    console.error("Erro ao aplicar cores e tamanhos:", error);
+  }
+};
+
+  useEffect(() => {
+  // Recuperar tamanhos das fontes
+  const savedFonteTamanhoPequeno = localStorage.getItem("fonteTamanhoPequeno") || "12px";
+  const savedFonteTamanhoNormal = localStorage.getItem("fonteTamanhoNormal") || "16px";
+  const savedFonteTamanhoMedio = localStorage.getItem("fonteTamanhoMedio") || "20px";
+  const savedFonteTamanhoGrande = localStorage.getItem("fonteTamanhoGrande") || "24px";
+
+  setFonteTamanhoPequeno(savedFonteTamanhoPequeno);
+  setFonteTamanhoNormal(savedFonteTamanhoNormal);
+  setFonteTamanhoMedio(savedFonteTamanhoMedio);
+  setFonteTamanhoGrande(savedFonteTamanhoGrande);
+
+  // Aplicar tamanhos das fontes como variáveis CSS globais
+  document.documentElement.style.setProperty("--fonte-tamanho-pequeno", savedFonteTamanhoPequeno);
+  document.documentElement.style.setProperty("--fonte-tamanho-normal", savedFonteTamanhoNormal);
+  document.documentElement.style.setProperty("--fonte-tamanho-medio", savedFonteTamanhoMedio);
+  document.documentElement.style.setProperty("--fonte-tamanho-grande", savedFonteTamanhoGrande);
+}, []);
+
+
 
   useEffect(() => {
     const savedGoals = JSON.parse(localStorage.getItem("goals")) || [];

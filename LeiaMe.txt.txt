@@ -1,0 +1,11 @@
+LUANA MATALLO RUGGIERO 
+
+Design de Interface Front-End de uma aplicação web para organização pessoal de leitura de livros
+
+RESUMO
+O projeto aborda o desenvolvimento de uma aplicação web para gestão pessoal de leituras, focando em funcionalidades que aprimoram a experiência de leitura dos usuários. Com o aumento da popularidade de livros impulsionado pela comunidade BookTok, a demanda por ferramentas para organização e acompanhamento de leitura tem crescido. A aplicação proposta é projetada com React e incorpora elementos de UX/UI, permitindo aos usuários cadastrarem, organizar e acompanhar suas leituras de forma eficiente e intuitiva. O projeto baseou-se na análise de aplicações existentes como Skoob, Goodreads e Maratona, visando superar as limitações identificadas nessas plataformas, especialmente em termos de intuitividade e personalização. A aplicação oferece funcionalidades de metas de leitura, atualização de progresso, personalização de layout, e inclui um sistema de busca eficiente.
+Palavras-chave: gestão de leitura; aplicação web; personalização de layout; design interface; React.
+
+Orientador: Prof. Dra. Bianca Maria Pedrosa
+
+Dez/2024
